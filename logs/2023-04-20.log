@@ -1,0 +1,28 @@
+Arnau y Luis:
+
+OpenCV instalado en la Jetson Nano
+
+NanoCamera también instalada
+
+Podemos leer imagenes de las 2 camaras. La 0 es la izquierda, la 1 es la derecha. Mirado con los USBs a la izquierda.
+
+
+
+Hay que cosneguir poder hacer una imagen sola, en vez de tener que leer constantemente: hacer foto en vez de video.
+
+
+
+HAY QUE HACER SOPORTE PARA LAS CAMARAS
+
+
+
+
+
+
+Pere, Luis:
+
+Lo del arduino.
+
+
+
+
