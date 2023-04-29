@@ -14,7 +14,7 @@ class UltrasoundSensor
       }
 
     long ping_blocking();
-}
+};
 
 long UltrasoundSensor::ping_blocking()
 {

@@ -4,7 +4,7 @@ int pin_echo1 = 7;
 int pin_trigger2 = 2;
 int pin_echo2 = 4;
 
-void setup() {
+void _setup() {
   // put your setup code here, to run once:
   pinMode(LED_BUILTIN, OUTPUT);//Inicializamos el led incorporado en la propia placa como una salida  
   Serial.begin(9600);
@@ -14,7 +14,7 @@ void setup() {
   pinMode(pin_echo2, INPUT);
 }
 
-void loop() {
+void _loop() {
   digitalWrite(pin_trigger1, LOW);
   digitalWrite(pin_trigger2, LOW); 
   delayMicroseconds(4);
