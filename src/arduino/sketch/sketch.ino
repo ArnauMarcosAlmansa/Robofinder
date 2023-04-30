@@ -11,7 +11,9 @@ UltrasoundSensor ultrasoundsensor2(12,13);
 Motor motorIzquierdo(2, 3, 4);
 Motor motorDerecho(2, 3, 4);
 
-volatile bool interrupcion_i2c = false;
+bool interrupcion_i2c = false;
+int canal_recibido_i2c = 0;
+int valor_recibido_i2c = 0;
 
 void updateEncoder1() {
   encoder1.update();
@@ -24,7 +26,12 @@ void updateEncoder2() {
 }
 
 void i2c_interrupcion() {
-  interrupcion_i2c = true;
+  if (canal_recibido_i2c == 0){
+    canal_recibido_i2c = Wire.read();
+  } else {
+    valor_recibido_i2c = Wire.read();
+    interrupcion_i2c = true;
+  }
 }
 
 void setup() {
@@ -37,6 +44,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(19), updateEncoder2, CHANGE);
 
   //attachInterrupt(digitalPinToInterrupt(SDA), i2c_interrupcion, RISING); // Seria para un arduino master no esclavo.
+  Wire.begin(0x04);
   Wire.onReceive(i2c_interrupcion);
 
 }
@@ -48,25 +56,23 @@ void loop() {
 
 
   if (interrupcion_i2c) {
-    byte canal;
-    int valor;
-    Wire.requestFrom(10, 2); // Leer 2 bytes del dispositivo. Direccion 10.
-    if(Wire.available() >= 2) {
-      byte canal = Wire.read();
-      int valor = Wire.read();
-    }
+    Serial.print("Canal ");
+    Serial.println(canal_recibido_i2c);
 
-    switch (canal) {
+    Serial.print("Valor ");
+    Serial.println(valor_recibido_i2c);
+
+    switch (canal_recibido_i2c) {
       // Controladora Motor Izquierda
       case 10:
         // Velocidad.
-        motorIzquierdo.write_speed(valor);
+        motorIzquierdo.write_speed(valor_recibido_i2c);
         break;
       case 11:
         // Sentido. 1 Para Forward i 2 para Backward.
-        if (valor == 1)
+        if (valor_recibido_i2c == 1)
           motorIzquierdo.forward();
-        else if(valor == 2)
+        else if(valor_recibido_i2c == 2)
           motorIzquierdo.backward();
         break;
       case 12:
@@ -75,23 +81,23 @@ void loop() {
         break;
       case 13:
         //Aceleración
-        motorIzquierdo.accelerate(valor);
+        motorIzquierdo.accelerate(valor_recibido_i2c);
         break;
       case 14:
         //Deceleración 
-        motorIzquierdo.deccelerate(valor);
+        motorIzquierdo.deccelerate(valor_recibido_i2c);
         break;
 
       // Controladora Motor Derecha.
       case 20:
         // Velocidad.
-        motorDerecho.write_speed(valor);
+        motorDerecho.write_speed(valor_recibido_i2c);
         break;
       case 21:
         // Sentido. 1 Para Forward i 2 para Backward.
-        if (valor == 1)
+        if (valor_recibido_i2c == 1)
           motorDerecho.forward();
-        else if(valor == 2)
+        else if(valor_recibido_i2c == 2)
           motorDerecho.backward();
         break;
       case 22:
@@ -100,20 +106,23 @@ void loop() {
         break;
       case 23:
         //Aceleración
-        motorDerecho.accelerate(valor);
+        motorDerecho.accelerate(valor_recibido_i2c);
         break;
       case 24:
         //Deceleración 
-        motorDerecho.deccelerate(valor);
+        motorDerecho.deccelerate(valor_recibido_i2c);
         break;
 
     }
     
+    // Reiniciamos las variables.
+    canal_recibido_i2c = 0;
+    valor_recibido_i2c = 0;
     interrupcion_i2c = false;
   }
 
 
 
 
-  delay(20);
+  delay(100);
 }
