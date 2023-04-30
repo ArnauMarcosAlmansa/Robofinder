@@ -1,20 +1,5 @@
-
-class UltrasoundSensor
-{
-  private:
-    int pin_trigger;
-    int pin_echo;
-
-  public:
-    UltrasoundSensor(int pin_trigger, int pin_echo):
-      pin_trigger(pin_trigger), pin_echo(pin_echo)
-      {
-        pinMode(pin_trigger, OUTPUT);
-        pinMode(pin_echo, INPUT);
-      }
-
-    long ping_blocking();
-};
+#include <Arduino.h>
+#include "UltrasoundSensor.h"
 
 long UltrasoundSensor::ping_blocking()
 {
@@ -31,4 +16,3 @@ long UltrasoundSensor::ping_blocking()
   
   return distanceCm;
 }
-
