@@ -6,14 +6,18 @@
 Encoder encoder1(2, 3);
 Encoder encoder2(18, 19);
 
-UltrasoundSensor ultrasoundsensor1(10,11);
+UltrasoundSensor ultrasoundsensor1(8,9);
 UltrasoundSensor ultrasoundsensor2(12,13);
+
 Motor motorIzquierdo(2, 3, 4);
 Motor motorDerecho(2, 3, 4);
 
-bool interrupcion_i2c = false;
-int canal_recibido_i2c = 0;
-int valor_recibido_i2c = 0;
+#include "i2c.h"
+
+bool i2c_interrupt = false;             // Hacemos la condicion dentro del loop al tener el mensaje completo
+int channel_received_i2c = 0;           // El canal que especifica el usuario que quiere usar. (Es el primer mensaje de 1Byte que recibimos).
+uint8_t byte1_received_message_i2c = 0; // El primer byte del valor que recibimos.
+uint16_t received_message_i2c = 0;      // El valor final del mensaje (2Bytes).
 
 void updateEncoder1() {
   encoder1.update();
@@ -26,11 +30,17 @@ void updateEncoder2() {
 }
 
 void i2c_interrupcion() {
-  if (canal_recibido_i2c == 0){
-    canal_recibido_i2c = Wire.read();
-  } else {
-    valor_recibido_i2c = Wire.read();
-    interrupcion_i2c = true;
+  if (channel_received_i2c == 0){
+    channel_received_i2c = Wire.read();
+  } else if(byte1_received_message_i2c == 0) {
+    byte1_received_message_i2c = Wire.read();
+  }else{    
+    uint8_t byte2_received_message_i2c = Wire.read(); // Leer el segundo byte recibido
+    
+    // Combinar los dos bytes en un entero de 16 bits
+    received_message_i2c = (byte2_received_message_i2c << 8) | byte1_received_message_i2c;
+    byte1_received_message_i2c = 0;
+    i2c_interrupt = true;
   }
 }
 
@@ -54,75 +64,13 @@ void loop() {
   int distancia1 = ultrasoundsensor1.ping_blocking();
   int distancia2 = ultrasoundsensor2.ping_blocking();
 
-
-  if (interrupcion_i2c) {
-    Serial.print("Canal ");
-    Serial.println(canal_recibido_i2c);
-
-    Serial.print("Valor ");
-    Serial.println(valor_recibido_i2c);
-
-    switch (canal_recibido_i2c) {
-      // Controladora Motor Izquierda
-      case 10:
-        // Velocidad.
-        motorIzquierdo.write_speed(valor_recibido_i2c);
-        break;
-      case 11:
-        // Sentido. 1 Para Forward i 2 para Backward.
-        if (valor_recibido_i2c == 1)
-          motorIzquierdo.forward();
-        else if(valor_recibido_i2c == 2)
-          motorIzquierdo.backward();
-        break;
-      case 12:
-        // Stop
-        motorIzquierdo.stop();
-        break;
-      case 13:
-        //Aceleración
-        motorIzquierdo.accelerate(valor_recibido_i2c);
-        break;
-      case 14:
-        //Deceleración 
-        motorIzquierdo.deccelerate(valor_recibido_i2c);
-        break;
-
-      // Controladora Motor Derecha.
-      case 20:
-        // Velocidad.
-        motorDerecho.write_speed(valor_recibido_i2c);
-        break;
-      case 21:
-        // Sentido. 1 Para Forward i 2 para Backward.
-        if (valor_recibido_i2c == 1)
-          motorDerecho.forward();
-        else if(valor_recibido_i2c == 2)
-          motorDerecho.backward();
-        break;
-      case 22:
-        // Stop
-        motorDerecho.stop();
-        break;
-      case 23:
-        //Aceleración
-        motorDerecho.accelerate(valor_recibido_i2c);
-        break;
-      case 24:
-        //Deceleración 
-        motorDerecho.deccelerate(valor_recibido_i2c);
-        break;
-
-    }
-    
-    // Reiniciamos las variables.
-    canal_recibido_i2c = 0;
-    valor_recibido_i2c = 0;
-    interrupcion_i2c = false;
+  //Serial.print(distancia1);
+  if (i2c_interrupt){
+    i2cInteruptions(channel_received_i2c, received_message_i2c);
+    channel_received_i2c = 0;
+    byte1_received_message_i2c = 0;
+    received_message_i2c = 0;
+    i2c_interrupt = false;
   }
 
-
-
-
-  delay(100);
 }
