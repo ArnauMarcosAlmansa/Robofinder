@@ -6,7 +6,7 @@ class Video
         cv::VideoCapture capture;
 
     public:
-        Video();
+        Video(const char* pipeline);
 
         ~Video() { capture.release(); };
         auto read(cv::Mat&) -> bool;
