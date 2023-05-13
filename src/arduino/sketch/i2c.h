@@ -1,4 +1,23 @@
-void i2cInteruptions(int channel, int option)
+class I2C
+{
+  private:
+    int speed;
+
+  public:
+    I2C():speed(0){};
+    void i2cInteruptions(int channel, int option);
+
+    void setDefaultSpeed();
+};
+
+void I2C::setDefaultSpeed()
+{
+  motorLeft.write_speed(this->speed);
+  motorRight.write_speed(this->speed);
+}
+
+
+void I2C::i2cInteruptions(int channel, int option)
   {
   Serial.print("Canal ");
   Serial.println(channel);
@@ -6,55 +25,86 @@ void i2cInteruptions(int channel, int option)
   Serial.println(option);
 
   switch (channel) {
-      // Controladora Motor Izquierda
-      case 10:
-        // Velocidad.
-        motorIzquierdo.write_speed(option);
-        break;
-      case 11:
-        // Sentido. 1 Para Forward i 2 para Backward.
-        if (option == 1)
-          motorIzquierdo.forward();
-        else if(option == 2)
-          motorIzquierdo.backward();
-        break;
-      case 12:
-        // Stop
-        motorIzquierdo.stop();
-        break;
-      case 13:
-        //Aceleración
-        motorIzquierdo.accelerate(option);
-        break;
-      case 14:
-        //Deceleración 
-        motorIzquierdo.deccelerate(option);
-        break;
 
-      // Controladora Motor Derecha.
-      case 20:
-        // Velocidad.
-        motorDerecho.write_speed(option);
-        break;
-      case 21:
-        // Sentido. 1 Para Forward i 2 para Backward.
-        if (option == 1)
-          motorDerecho.forward();
-        else if(option == 2)
-          motorDerecho.backward();
-        break;
-      case 22:
-        // Stop
-        motorDerecho.stop();
-        break;
-      case 23:
-        //Aceleración
-        motorDerecho.accelerate(option);
-        break;
-      case 24:
-        //Deceleración 
-        motorDerecho.deccelerate(option);
-        break;
+    // 1X Motors:
+    case 10:
+      //Enable Motors
+      this->speed = 100;
+      setDefaultSpeed();
+      Serial.println("Enable Motors");
+      break;
+
+    case 11:
+      //Forward
+      setDefaultSpeed();
+
+      motorLeft.forward();
+      motorRight.forward();
+
+      Serial.println("Forward");
+      break;
+
+    case 12:
+      //Backward
+      setDefaultSpeed();
+
+      motorLeft.backward();
+      motorRight.backward();
+
+      Serial.println("Backward");
+      break;
+
+    case 13:
+      //Left
+      motorLeft.forward();
+      motorRight.backward();
+
+      Serial.println("Left");
+      break;
+
+    case 14:
+      //Right
+      motorLeft.backward();
+      motorRight.forward();
+
+      Serial.println("Right");
+      break;
+
+    case 15:
+      // Stop
+      motorLeft.stop();
+      motorRight.stop();
+
+      Serial.println("Stop");
+      break;
+
+
+    // 2X Encoders:
+    case 20:
+      // Encoder Left
+
+      break;
+
+    case 21:
+      // Encoder Right
+      break;
+
+
+
+
+
+    // 3X Ultrasound:
+    case 30:
+      // Ultrasound Left
+      break;
+
+    case 31:
+      // Ultrasound Right
+      break;
+
+
+
+
 
     }
 }

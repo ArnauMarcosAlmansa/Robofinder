@@ -3,16 +3,17 @@
 #include "UltrasoundSensor.h"
 #include <Wire.h>
 
-Encoder encoder1(2, 3);
-Encoder encoder2(18, 19);
+Encoder encoder1(19,18);
+Encoder encoder2(3,2);
 
-UltrasoundSensor ultrasoundsensor1(8,9);
-UltrasoundSensor ultrasoundsensor2(12,13);
+UltrasoundSensor ultrasoundsensor1(22, 23);
+UltrasoundSensor ultrasoundsensor2(24, 25);
 
-Motor motorIzquierdo(2, 3, 4);
-Motor motorDerecho(2, 3, 4);
+Motor motorLeft(13, 38, 39);
+Motor motorRight(12, 40, 41);
 
 #include "i2c.h"
+
 
 bool i2c_interrupt = false;             // Hacemos la condicion dentro del loop al tener el mensaje completo
 int channel_received_i2c = 0;           // El canal que especifica el usuario que quiere usar. (Es el primer mensaje de 1Byte que recibimos).
@@ -21,12 +22,12 @@ uint16_t received_message_i2c = 0;      // El valor final del mensaje (2Bytes).
 
 void updateEncoder1() {
   encoder1.update();
-  Serial.println(encoder1.read());
+  //Serial.println(encoder1.read());
 }
 
 void updateEncoder2() {
   encoder2.update();
-  Serial.println(encoder2.read());
+  //Serial.println(encoder2.read());
 }
 
 void i2c_interrupcion() {
@@ -61,12 +62,12 @@ void setup() {
 
 void loop() {
   // Distancia sensor ultrasonido.
-  int distancia1 = ultrasoundsensor1.ping_blocking();
-  int distancia2 = ultrasoundsensor2.ping_blocking();
+  //int distancia1 = ultrasoundsensor1.ping_blocking();
+  //int distancia2 = ultrasoundsensor2.ping_blocking();
 
   //Serial.print(distancia1);
   if (i2c_interrupt){
-    i2cInteruptions(channel_received_i2c, received_message_i2c);
+    I2C().i2cInteruptions(channel_received_i2c, received_message_i2c);
     channel_received_i2c = 0;
     byte1_received_message_i2c = 0;
     received_message_i2c = 0;

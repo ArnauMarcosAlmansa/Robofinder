@@ -16,7 +16,9 @@ class Motor
         pinMode(pin_enable, OUTPUT);
         pinMode(pin_in1, OUTPUT);
         pinMode(pin_in2, OUTPUT);
-        digitalWrite(pin_enable, HIGH);
+        digitalWrite(pin_in1, LOW);
+        digitalWrite(pin_in2, LOW);
+        digitalWrite(pin_enable, LOW);
       }
 
     void stop();
