@@ -56,16 +56,16 @@ void I2C::i2cInteruptions(int channel, int option)
 
     case 13:
       //Left
-      motorLeft.write_speed(this->speed + 50);
-      motorRight.write_speed(this->speed);
+      motorLeft.forward();
+      motorRight.backward();
 
       Serial.println("Left");
       break;
 
     case 14:
       //Right
-      motorLeft.write_speed(this->speed);
-      motorRight.write_speed(this->speed + 50);
+      motorLeft.backward();
+      motorRight.forward();
 
       Serial.println("Right");
       break;

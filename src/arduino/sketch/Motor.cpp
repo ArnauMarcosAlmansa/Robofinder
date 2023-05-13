@@ -13,12 +13,14 @@ void Motor::forward()
 {
   digitalWrite(pin_in1, HIGH);
   digitalWrite(pin_in2, LOW);
+  analogWrite(pin_enable, speed);
 }
 
 void Motor::backward()
 {
   digitalWrite(pin_in1, LOW);
   digitalWrite(pin_in2, HIGH);
+  analogWrite(pin_enable, speed);
 }
 
 void Motor::write_speed(int speed)
