@@ -5,19 +5,20 @@ class I2C
 
   public:
     I2C():speed(0){};
-    void i2cInteruptions(int channel, int option);
+    int i2cInteruptions(int channel, int option);
 
     void setDefaultSpeed();
 };
 
 void I2C::setDefaultSpeed()
 {
+  this->speed = 100;
   motorLeft.write_speed(this->speed);
   motorRight.write_speed(this->speed);
 }
 
 
-void I2C::i2cInteruptions(int channel, int option)
+int I2C::i2cInteruptions(int channel, int option)
   {
   Serial.print("Canal ");
   Serial.println(channel);
@@ -29,27 +30,27 @@ void I2C::i2cInteruptions(int channel, int option)
     // 1X Motors:
     case 10:
       //Enable Motors
-      this->speed = 100;
       setDefaultSpeed();
       Serial.println("Enable Motors");
       break;
 
     case 11:
       //Forward
-      setDefaultSpeed();
-
       motorLeft.forward();
       motorRight.forward();
+      
+      setDefaultSpeed();
 
       Serial.println("Forward");
       break;
 
     case 12:
       //Backward
-      setDefaultSpeed();
 
       motorLeft.backward();
       motorRight.backward();
+
+      setDefaultSpeed();
 
       Serial.println("Backward");
       break;
@@ -59,6 +60,8 @@ void I2C::i2cInteruptions(int channel, int option)
       motorLeft.forward();
       motorRight.backward();
 
+      setDefaultSpeed();
+
       Serial.println("Left");
       break;
 
@@ -66,6 +69,8 @@ void I2C::i2cInteruptions(int channel, int option)
       //Right
       motorLeft.backward();
       motorRight.forward();
+
+      setDefaultSpeed();
 
       Serial.println("Right");
       break;
@@ -82,11 +87,12 @@ void I2C::i2cInteruptions(int channel, int option)
     // 2X Encoders:
     case 20:
       // Encoder Left
-
+      return encoderLeft.read();
       break;
 
     case 21:
       // Encoder Right
+      return (65536 - encoderRight.read());
       break;
 
 
@@ -103,8 +109,6 @@ void I2C::i2cInteruptions(int channel, int option)
       break;
 
 
-
-
-
     }
+    return 0;
 }
