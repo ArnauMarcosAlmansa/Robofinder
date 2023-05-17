@@ -6,8 +6,8 @@
 Encoder encoderLeft(19,18);
 Encoder encoderRight(3,2);
 
-UltrasoundSensor ultrasoundsensor1(22, 23);
-UltrasoundSensor ultrasoundsensor2(24, 25);
+UltrasoundSensor ultrasoundsensorLeft(22, 23);
+UltrasoundSensor ultrasoundsensorRight(24, 25);
 
 Motor motorLeft(13, 38, 39);
 Motor motorRight(12, 40, 41);
@@ -73,7 +73,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(3), updateEncoderRight, CHANGE);
 
   //attachInterrupt(digitalPinToInterrupt(SDA), i2c_interrupcion, RISING); // Seria para un arduino master no esclavo.
-  Wire.begin(0x04);
+  Wire.begin(0x30);
   Wire.onReceive(i2c_interrupcion);
   Wire.onRequest(i2c_sendData);
 

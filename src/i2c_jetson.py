@@ -30,7 +30,7 @@ def readNumber():
 
 
 # Enviar datos de la Jetson al Arduino.
-arduino_address = 0x04
+arduino_address = 0x30
 bus = smbus.SMBus(1)
 
 while True:

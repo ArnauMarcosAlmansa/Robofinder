@@ -97,15 +97,26 @@ int I2C::i2cInteruptions(int channel, int option)
 
 
 
+    case 22:
+      // Reset Encoder Left
+      encoderLeft.reset();
+      break;
+
+    case 23:
+      // Reset Encoder Right
+      encoderRight.reset();
+      break;      
 
 
     // 3X Ultrasound:
     case 30:
       // Ultrasound Left
+      return ultrasoundsensorLeft.ping_blocking();
       break;
 
     case 31:
       // Ultrasound Right
+      return ultrasoundsensorRight.ping_blocking();
       break;
 
 
