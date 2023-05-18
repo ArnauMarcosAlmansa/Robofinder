@@ -1,0 +1,4 @@
+Valor de los encoders haciendo un giro.
+
+Respuesta recibida: Canal = 20, Mensaje = 15
+Respuesta recibida: Canal = 21, Mensaje = 15
