@@ -5,7 +5,7 @@ class I2C
 
   public:
     I2C(){};
-    int i2cInteruptions(int channel, int message[4]);
+    int i2cInteruptions(int channel, uint8_t message[4]);
 
     void setDefaultSpeed(int speedLeft, int speedRight);
 };
@@ -17,16 +17,14 @@ void I2C::setDefaultSpeed(int speedLeft, int speedRight)
   motorRight.write_speed(speedRight);
 }
 
-
-int I2C::i2cInteruptions(int channel, int message[4])
+int I2C::i2cInteruptions(int channel, uint8_t message[4])
   {
   Serial.print("Canal ");
   Serial.println(channel);
   Serial.print("Valor ");
   Serial.println(message[0]);
   Serial.println(message[1]);
-  Serial.println(message[2]);
-  Serial.println(message[3]);
+  Serial.println((message[3] << 8) | message[2]);
 
   uint16_t encoder_final_position = -1;
 
@@ -50,15 +48,8 @@ int I2C::i2cInteruptions(int channel, int message[4])
       encoderRight.reset();
 
       // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
-      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
-      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
-
-      // Comprobamos que no sean valores negativos
-      if (encoder_left_final_position < 0) 
-        encoder_left_final_position += 65536;
-
-      if (encoder_right_final_position < 0)
-        encoder_right_final_position +=65536;
+      encoder_left_final_position = encoder_final_position;
+      encoder_right_final_position = 65536 - encoder_final_position;
 
       // Establecemos la direccion de los motore
       motorLeft.forward();
@@ -73,22 +64,15 @@ int I2C::i2cInteruptions(int channel, int message[4])
       //Backward
 
       // Combinar los dos bytes en un entero de 16 bits
-      uint16_t encoder_final_position = (message[3] << 8) | message[2];
+      encoder_final_position = (message[3] << 8) | message[2];
 
       // Reset encoders.
       encoderLeft.reset();
       encoderRight.reset();
 
       // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
-      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
-      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
-
-      // Comprobamos que no sean valores negativos
-      if (encoder_left_final_position < 0) 
-        encoder_left_final_position += 65536;
-
-      if (encoder_right_final_position < 0)
-        encoder_right_final_position +=65536;
+      encoder_left_final_position = encoder_final_position;
+      encoder_right_final_position = 65536 - encoder_final_position;
 
       // Establecemos la direccion de los motores
       motorLeft.backward();
@@ -111,16 +95,9 @@ int I2C::i2cInteruptions(int channel, int message[4])
       encoderRight.reset();
 
       // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
-      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
-      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
-
-      // Comprobamos que no sean valores negativos
-      if (encoder_left_final_position < 0) 
-        encoder_left_final_position += 65536;
-
-      if (encoder_right_final_position < 0)
-        encoder_right_final_position +=65536;
-
+      encoder_left_final_position = encoder_final_position;
+      encoder_right_final_position = 65536 - encoder_final_position;
+      
       // Establecemos la direccion de los motores
       motorLeft.forward();
       motorRight.backward();
@@ -142,15 +119,8 @@ int I2C::i2cInteruptions(int channel, int message[4])
       encoderRight.reset();
 
       // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
-      encoder_left_final_position = encoderLeft.read() - encoder_final_position;
-      encoder_right_final_position = 65536 - encoderRight.read() - encoder_final_position;
-
-      // Comprobamos que no sean valores negativos
-      if (encoder_left_final_position < 0) 
-        encoder_left_final_position += 65536;
-
-      if (encoder_right_final_position < 0)
-        encoder_right_final_position +=65536;
+      encoder_left_final_position = encoder_final_position;
+      encoder_right_final_position = 65536 - encoder_final_position;
 
       // Establecemos la direccion de los motores
       motorLeft.backward();

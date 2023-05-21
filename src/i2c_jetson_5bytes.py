@@ -2,11 +2,10 @@ import smbus
 import time
 
 def enviar_entero(canal, valor1Byte_1, valor1Byte_2, valor):
+    bus.write_byte(arduino_address, canal)
+
     bus.write_byte(arduino_address, valor1Byte_1)
     bus.write_byte(arduino_address, valor1Byte_2)
-
-
-    bus.write_byte(arduino_address, canal)
 
     byte1 = valor & 0xFF # Los 8 bits menos significativos
     byte2 = (valor >> 8) & 0xFF # Los 8 bits mas significativos
