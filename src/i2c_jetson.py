@@ -1,7 +1,10 @@
 import smbus
 import time
 
-def enviar_entero(canal, valor):
+def enviar_entero(canal, valor1Byte_1, valor1Byte_2, valor):
+    bus.write_byte(arduino_address, valor1Byte_1)
+    bus.write_byte(arduino_address, valor1Byte_2)
+
 
     bus.write_byte(arduino_address, canal)
 
@@ -34,6 +37,6 @@ arduino_address = 0x30
 bus = smbus.SMBus(1)
 
 while True:
-  enviar_entero(int(input("Canal (1Byte): ")), int(input("Valor (2Bytes): ")))
+  enviar_entero(int(input("Canal (1Byte): ")), int(input("Valor (1Bytes): ")), int(input("Valor (1Bytes): ")), int(input("Valor (2Bytes): ")))
   time.sleep(0.1)
   print(readNumber())

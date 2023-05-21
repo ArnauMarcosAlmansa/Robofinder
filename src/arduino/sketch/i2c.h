@@ -1,76 +1,163 @@
 class I2C
 {
   private:
-    int speed;
+    //int speed;
 
   public:
-    I2C():speed(0){};
-    int i2cInteruptions(int channel, int option);
+    I2C(){};
+    int i2cInteruptions(int channel, int message[4]);
 
-    void setDefaultSpeed();
+    void setDefaultSpeed(int speedLeft, int speedRight);
 };
 
-void I2C::setDefaultSpeed()
+void I2C::setDefaultSpeed(int speedLeft, int speedRight)
 {
-  this->speed = 100;
-  motorLeft.write_speed(this->speed);
-  motorRight.write_speed(this->speed);
+  //this->speed = 100;
+  motorLeft.write_speed(speedLeft);
+  motorRight.write_speed(speedRight);
 }
 
 
-int I2C::i2cInteruptions(int channel, int option)
+int I2C::i2cInteruptions(int channel, int message[4])
   {
   Serial.print("Canal ");
   Serial.println(channel);
   Serial.print("Valor ");
-  Serial.println(option);
+  Serial.println(message[0]);
+  Serial.println(message[1]);
+  Serial.println(message[2]);
+  Serial.println(message[3]);
+
+  uint16_t encoder_final_position = -1;
 
   switch (channel) {
 
     // 1X Motors:
     case 10:
       //Enable Motors
-      setDefaultSpeed();
+      setDefaultSpeed(100,100);
       Serial.println("Enable Motors");
       break;
 
-    case 11:
+    case 11: // 4 Bytes
       //Forward
+
+      // Combinar los dos bytes en un entero de 16 bits
+      encoder_final_position = (message[3] << 8) | message[2];
+
+      // Reset encoders.
+      encoderLeft.reset();
+      encoderRight.reset();
+
+      // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
+      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
+      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
+
+      // Comprobamos que no sean valores negativos
+      if (encoder_left_final_position < 0) 
+        encoder_left_final_position += 65536;
+
+      if (encoder_right_final_position < 0)
+        encoder_right_final_position +=65536;
+
+      // Establecemos la direccion de los motore
       motorLeft.forward();
       motorRight.forward();
       
-      setDefaultSpeed();
+      setDefaultSpeed(message[0], message[1]);
 
       Serial.println("Forward");
       break;
 
-    case 12:
+    case 12: // 4 Bytes
       //Backward
 
+      // Combinar los dos bytes en un entero de 16 bits
+      uint16_t encoder_final_position = (message[3] << 8) | message[2];
+
+      // Reset encoders.
+      encoderLeft.reset();
+      encoderRight.reset();
+
+      // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
+      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
+      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
+
+      // Comprobamos que no sean valores negativos
+      if (encoder_left_final_position < 0) 
+        encoder_left_final_position += 65536;
+
+      if (encoder_right_final_position < 0)
+        encoder_right_final_position +=65536;
+
+      // Establecemos la direccion de los motores
       motorLeft.backward();
       motorRight.backward();
 
-      setDefaultSpeed();
+      // Damos velocidad a los motores.
+      setDefaultSpeed(message[0], message[1]);
 
       Serial.println("Backward");
       break;
 
-    case 13:
+    case 13: // 4 Bytes
       //Left
+
+      // Combinar los dos bytes en un entero de 16 bits
+      encoder_final_position = (message[3] << 8) | message[2];
+
+      // Reset encoders.
+      encoderLeft.reset();
+      encoderRight.reset();
+
+      // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
+      encoder_left_final_position = encoderLeft.read() + encoder_final_position;
+      encoder_right_final_position = 65536 - encoderRight.read() + encoder_final_position;
+
+      // Comprobamos que no sean valores negativos
+      if (encoder_left_final_position < 0) 
+        encoder_left_final_position += 65536;
+
+      if (encoder_right_final_position < 0)
+        encoder_right_final_position +=65536;
+
+      // Establecemos la direccion de los motores
       motorLeft.forward();
       motorRight.backward();
 
-      setDefaultSpeed();
+      // Damos velocidad a los motores.
+      setDefaultSpeed(message[0], message[1]);
 
       Serial.println("Left");
       break;
 
-    case 14:
+    case 14: // 4 Bytes
       //Right
+
+      // Combinar los dos bytes en un entero de 16 bits
+      encoder_final_position = (message[3] << 8) | message[2];
+
+      // Reset encoders.
+      encoderLeft.reset();
+      encoderRight.reset();
+
+      // Guardamos los valores finales del encoder, para que pare el movimiento al llegar a ellos.
+      encoder_left_final_position = encoderLeft.read() - encoder_final_position;
+      encoder_right_final_position = 65536 - encoderRight.read() - encoder_final_position;
+
+      // Comprobamos que no sean valores negativos
+      if (encoder_left_final_position < 0) 
+        encoder_left_final_position += 65536;
+
+      if (encoder_right_final_position < 0)
+        encoder_right_final_position +=65536;
+
+      // Establecemos la direccion de los motores
       motorLeft.backward();
       motorRight.forward();
 
-      setDefaultSpeed();
+      // Damos velocidad a los motores.
+      setDefaultSpeed(message[0], message[1]);
 
       Serial.println("Right");
       break;
