@@ -6,8 +6,8 @@
 #include <vector>
 #include "DUO3D.h"
 
-#define WIDTH	320
-#define HEIGHT	240
+#define WIDTH	752
+#define HEIGHT	480
 #define FPS		30
 
 /*
@@ -70,16 +70,71 @@ cv::Mat Triangulate(
     return homogeneous_points;
 }
 
+cv::Mat computeProjMat(cv::Mat camMat, cv::Mat rotation, cv::Mat translation)
+{
+    cv::Mat RTMat(3, 4, CV_64F);
+    //2. Append translation vector to rotation matrix
+    cv::hconcat(rotation, translation, RTMat);
+    //3. Compute projection matrix by multiplying intrinsic parameter 
+    //matrix (A) with 3 x 4 rotation and translation pose matrix (RT).
+    return (camMat * RTMat);
+}
+
+
+cv::Mat intrinsics_left = (cv::Mat_<float>(3, 3) <<
+    381.426243, 0, 394.676891,
+    0, 381.586377, 248.563332,
+    0, 0, 1);
+
+cv::Mat intrinsics_right = (cv::Mat_<float>(3, 3) <<
+    381.426243, 0, 394.676891,
+    0, 381.586377, 248.563332,
+    0, 0, 1
+);
+
+
+cv::Mat extrinsics = (cv::Mat_<float>(3, 4) <<
+    0.999987, 0.004473, 0.002619, -2.85599996,
+    -0.004478, 0.999988, 0.001871, 0.14802,
+    -0.002611, -0.001883, 0.999995, -0.491068
+);
+
+cv::Mat extrinsic_rotation = (cv::Mat_<float>(3, 3) <<
+    0.999987, 0.004473, 0.002619,
+    -0.004478, 0.999988, 0.001871,
+    -0.002611, -0.001883, 0.999995
+);
+
+cv::Mat extrinsic_translation = (cv::Mat_<float>(3, 1) <<
+    -2.85599996,
+    0.14802,
+    -0.491068
+);
+
+cv::Mat rotation = (cv::Mat_<float>(3, 3) <<
+    1, 0, 0,
+    0, 1, 0,
+    0, 0, 1
+);
+
+cv::Mat translation = (cv::Mat_<float>(3, 1) <<
+    0,
+    0,
+    0
+);
+
 
 cv::Mat proj1 = (cv::Mat_<float>(3, 4) <<
     1, 0, 0, 0,
     0, 1, 0, 0,
-    0, 0, 1, 0);
+    0, 0, 1, 0
+);
 
 cv::Mat proj2 = (cv::Mat_<float>(3, 4) <<
     0.999987, 0.004473, 0.002619, -28.5599996,
     -0.004478, 0.999988, 0.001871, 0.14802,
-    -0.002611, -0.001883, 0.999995, -0.491068);
+    -0.002611, -0.001883, 0.999995, -0.491068
+);
 
 
 auto main() -> int {
@@ -93,11 +148,7 @@ auto main() -> int {
 	}
 	printf("\nHit <ESC> to exit.\n");
 	
-	// Create OpenCV windows
-	cv::namedWindow("Live");
-
-
-	// Set exposure and LED brightness
+  // Set exposure and LED brightness
 	SetGain(0);
 	SetExposure(50);
 	SetLed(25);
@@ -147,14 +198,28 @@ auto main() -> int {
         const std::vector<cv::DMatch>& m = rawMatches[i];
         if (m.size() == 2 && m[0].distance < m[1].distance * 0.75)
         {
-            p1.push_back(keypoints_left[m[0].queryIdx].pt);
-            p2.push_back(keypoints_right[m[0].trainIdx].pt);
-            distances.push_back(m[0].distance);
+            cv::KeyPoint& pt1 = keypoints_left[m[0].queryIdx];
+            cv::KeyPoint& pt2 = keypoints_right[m[0].trainIdx];
+            if (abs(pt1.pt.y - pt2.pt.y) < 3)
+            {
+                p1.push_back(keypoints_left[m[0].queryIdx].pt);
+                p2.push_back(keypoints_right[m[0].trainIdx].pt);
+                distances.push_back(m[0].distance);
+            }
         }
     }
 
-    cv::Mat homogeneous_points = Triangulate(proj1, proj2, p1, p2);
 
+    cv::Mat rotation_left = extrinsic_rotation * rotation, translation_left = extrinsic_translation + translation;
+    cv::Mat rotation_right = rotation, translation_right = translation;
+
+    proj1 = computeProjMat(intrinsics_left, rotation_left, translation_left);
+    proj2 = computeProjMat(intrinsics_right, rotation_right, translation_right);
+
+    std::cout << "proj1 = " << proj1 << std::endl;
+    std::cout << "proj2 = " << proj2 << std::endl;
+
+    cv::Mat homogeneous_points = Triangulate(proj1, proj2, p1, p2);
 
     cv::transpose(homogeneous_points, homogeneous_points);
 
