@@ -10,8 +10,8 @@
 Encoder encoderLeft(19,18);
 Encoder encoderRight(3,2);
 
-UltrasoundSensor ultrasoundsensorLeft(22, 23);
-UltrasoundSensor ultrasoundsensorRight(24, 25);
+UltrasoundSensor ultrasoundsensorLeft(24, 25);
+UltrasoundSensor ultrasoundsensorRight(22, 23);
 
 Motor motorLeft(13, 38, 39);
 Motor motorRight(12, 40, 41);
@@ -35,7 +35,8 @@ int message_count = 0;                  // Temporal. Cuenta los mensajes que hem
 int total_number_message = 0;           // Temporal. Guardamos el numero total de mensajes que tienen que llegar para el canal seleccionado.
 uint8_t message_i2c[4] = {0,0,0,0};     // Mensajes de recibimos de 1Bytes cada uno.
 
-
+int count_loop = 0;                     // Contador de iteraciones en el loop. Para realizar la medicion de los ultrasonidos.
+int ultrasonic_limit = 10;              // Limite de distancia en el que los ultrasonidos pararan el movimineto del robot.
 
 void updateEncoderLeft() {
   encoderLeft.update();
@@ -124,5 +125,17 @@ void loop() {
 
     i2c_interrupt = false;
   }
+
+  if (count_loop > 50){
+
+    if ((ultrasoundsensorLeft.ping_blocking() <= ultrasonic_limit) || (ultrasoundsensorRight.ping_blocking() <= ultrasonic_limit)) { // Comprobamos si hemos llegado a una distancia limite.
+      motorLeft.stop();
+      motorRight.stop();
+    }
+
+    count_loop = 0;
+  }
+
+  count_loop += 1;
 
 }
