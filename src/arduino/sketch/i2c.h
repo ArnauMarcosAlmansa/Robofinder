@@ -57,6 +57,9 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       
       setDefaultSpeed(message[0], message[1]);
 
+      // Luz led indicadora.
+      led.forward();
+
       Serial.println("Forward");
       break;
 
@@ -80,6 +83,9 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
 
       // Damos velocidad a los motores.
       setDefaultSpeed(message[0], message[1]);
+
+      // Luz led indicadora.
+      led.backward();
 
       Serial.println("Backward");
       break;
@@ -105,6 +111,9 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Damos velocidad a los motores.
       setDefaultSpeed(message[0], message[1]);
 
+      // Luz led indicadora.
+      led.arrowLeft();
+
       Serial.println("Left");
       break;
 
@@ -129,6 +138,9 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Damos velocidad a los motores.
       setDefaultSpeed(message[0], message[1]);
 
+      // Luz led indicadora.
+      led.arrowRight();
+
       Serial.println("Right");
       break;
 
@@ -136,6 +148,9 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Stop
       motorLeft.stop();
       motorRight.stop();
+
+      // Luz led indicadora.
+      led.stop();
 
       Serial.println("Stop");
       break;
@@ -174,6 +189,12 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
     case 31:
       // Ultrasound Right
       return ultrasoundsensorRight.ping_blocking();
+      break;
+
+
+    case 40:
+    // LED OFF.
+      led.off();
       break;
 
 
