@@ -4,11 +4,12 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <vector>
+#include <octomap/octomap.h>
 #include "DUO3D.h"
 
 #define WIDTH	752
 #define HEIGHT	480
-#define FPS		30
+#define FPS		15
 
 /*
 std::vector<cv::Point2d> Project(const std::vector<cv::Point3d>& points,
@@ -94,9 +95,9 @@ cv::Mat intrinsics_right = (cv::Mat_<float>(3, 3) <<
 
 
 cv::Mat extrinsics = (cv::Mat_<float>(3, 4) <<
-    0.999987, 0.004473, 0.002619, -2.85599996,
-    -0.004478, 0.999988, 0.001871, 0.14802,
-    -0.002611, -0.001883, 0.999995, -0.491068
+    0.999987, 0.004473, 0.002619, -0.285599996,
+    -0.004478, 0.999988, 0.001871, 0.0014802,
+    -0.002611, -0.001883, 0.999995, -0.00491068
 );
 
 cv::Mat extrinsic_rotation = (cv::Mat_<float>(3, 3) <<
@@ -106,9 +107,9 @@ cv::Mat extrinsic_rotation = (cv::Mat_<float>(3, 3) <<
 );
 
 cv::Mat extrinsic_translation = (cv::Mat_<float>(3, 1) <<
-    -2.85599996,
-    0.14802,
-    -0.491068
+    -0.285599996,
+    0.0014802,
+    -0.00491068
 );
 
 cv::Mat rotation = (cv::Mat_<float>(3, 3) <<
@@ -139,7 +140,7 @@ cv::Mat proj2 = (cv::Mat_<float>(3, 4) <<
 
 auto main() -> int {
 	printf("DUOLib Version:       v%s\n", GetDUOLibVersion());
-
+  octomap::OcTree tree(0.05);
 	// Open DUO camera and start capturing
 	if(!OpenDUOCamera(WIDTH, HEIGHT, FPS))
 	{
@@ -153,19 +154,23 @@ auto main() -> int {
 	SetExposure(50);
 	SetLed(25);
 
+  extrinsic_translation = extrinsic_translation * 100;
+
   cv::Ptr<cv::Feature2D> feature_detector = cv::SIFT::create();
   cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("FlannBased");
 
 	// Run capture loop until <Esc> key is pressed
-	while((cv::waitKey(1) & 0xff) != 27)
+	// while((cv::waitKey(1) & 0xff) != 27)
+  for (int iter = 0; iter < 100; iter++)
 	{
 		// Capture DUO frame
 		PDUOFrame pFrameData = GetDUOFrame();
 		if(pFrameData == NULL) continue;
 
 
-    cv::Mat left { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->leftData };
-    cv::Mat right { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->rightData };
+    // LAS PUTAS CAMARAS ESTAN GIRADAS
+    cv::Mat left { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->rightData };
+    cv::Mat right { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->leftData };
 
     std::vector<cv::KeyPoint> keypoints_left, keypoints_right;
     cv::Mat descriptors_left, descriptors_right;
@@ -200,7 +205,7 @@ auto main() -> int {
         {
             cv::KeyPoint& pt1 = keypoints_left[m[0].queryIdx];
             cv::KeyPoint& pt2 = keypoints_right[m[0].trainIdx];
-            if (abs(pt1.pt.y - pt2.pt.y) < 3)
+            if (abs(pt1.pt.y - pt2.pt.y) < 3 && pt1.pt.x > pt2.pt.x)
             {
                 p1.push_back(keypoints_left[m[0].queryIdx].pt);
                 p2.push_back(keypoints_right[m[0].trainIdx].pt);
@@ -209,6 +214,7 @@ auto main() -> int {
         }
     }
 
+    std::cout << "p1.size() = " << p1.size() << std::endl;
 
     cv::Mat rotation_left = extrinsic_rotation * rotation, translation_left = extrinsic_translation + translation;
     cv::Mat rotation_right = rotation, translation_right = translation;
@@ -233,12 +239,18 @@ auto main() -> int {
 
     std::vector<cv::Point3f> points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
+
     for (auto& p : points3d) {
+      octomap::point3d point(p.x, p.y, p.z);
+      if (iter == 10)
+        tree.updateNode(point, true);  // Insertar el punto en el árbol
+      /*
       std::cout
         << p.x << ", "
         << p.y << ", "
         << p.z
         << std::endl;
+        */
     }
 
     std::cout << std::endl;
@@ -248,6 +260,14 @@ auto main() -> int {
 	}
 
 	cv::destroyAllWindows();
+
+     std::string filename = "octree.bt";
+
+   if (tree.writeBinary(filename)) {
+   	std::cout << "Árbol octal guardado en: " << filename << std::endl;
+   } else {
+   	std::cout << "Error al guardar el árbol octal en: " << filename << std::endl;
+   }
 
 	// Close DUO camera
 	CloseDUOCamera();
