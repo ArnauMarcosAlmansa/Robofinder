@@ -2,99 +2,87 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
-// #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
-// #include <i2c/smbus.h>
 #include <linux/i2c-dev.h>
 
-#define I2C_BUS "/dev/i2c-1"  // Cambiar según el bus I2C utilizado
-#define ARDUINO_ADDRESS 0x30  // Cambiar según la dirección del Arduino en el bus I2C
+#define ARDUINO_ADDRESS 0x30
 
-int enviar_entero(int canal, int valor, int file) {
-    uint8_t byte1 = valor & 0xFF;  // Los 8 bits menos significativos
-    uint8_t byte2 = (valor >> 8) & 0xFF;  // Los 8 bits más significativos
+int arduino_bus;
 
-    if (write(file, &canal, 1) != 1) {
-        perror("Error al enviar el canal I2C");
-        return 1;
+void setup() {
+    arduino_bus = open("/dev/i2c-1", O_RDWR);
+    if (arduino_bus < 0) {
+        perror("Error al abrir el bus I2C");
+        return;
     }
 
-    if (write(file, &byte1, 1) != 1) {
-        perror("Error al enviar el byte1 I2C");
-        return 1;
+    if (ioctl(arduino_bus, I2C_SLAVE, ARDUINO_ADDRESS) < 0) {
+        perror("Error al establecer la dirección del Arduino I2C");
+        close(arduino_bus);
+        return;
     }
-
-    if (write(file, &byte2, 1) != 1) {
-        perror("Error al enviar el byte2 I2C");
-        return 1;
-    }
-
-    return 0;
 }
 
-int readNumber(int file, int* channel, int* message) {
-    if (read(file, channel, 1) != 1) {
-        perror("Error al leer el canal I2C");
-        return 1;
-    }
-    
-    uint8_t byte2, byte1;
-
-    if (read(file, &byte2, 1) != 1) {
-        perror("Error al leer el byte2 I2C");
-        return 1;
+void read_1byte_2bytes(int* channel, int* message) {
+    uint8_t buffer[3];
+    if (read(arduino_bus, buffer, sizeof(buffer)) != sizeof(buffer)) {
+        perror("Error al leer datos del Arduino I2C");
+        return;
     }
 
-    if (read(file, &byte1, 1) != 1) {
-        perror("Error al leer el byte1 I2C");
-        return 1;
+    *channel = buffer[0];
+    *message = (buffer[1] << 8) | buffer[2];
+}
+
+void send_1byte(int byte1) {
+    if (write(arduino_bus, &byte1, sizeof(byte1)) != sizeof(byte1)) {
+        perror("Error al enviar datos al Arduino I2C");
     }
+}
 
-    *message = (byte1 << 8) | byte2;
-
-    return 0;
+void send_1byte_1byte_1byte_2byte(int byte1, int byte2, int byte3, int twoBytes) {
+    uint8_t buffer[5] = { (uint8_t)byte1, (uint8_t)byte2, (uint8_t)byte3, (uint8_t)(twoBytes & 0xFF), (uint8_t)((twoBytes >> 8) & 0xFF) };
+    if (write(arduino_bus, buffer, sizeof(buffer)) != sizeof(buffer)) {
+        perror("Error al enviar datos al Arduino I2C");
+    }
 }
 
 int main() {
-    int file;
+    setup();
 
-    // Abrir el bus I2C
-    file = open(I2C_BUS, O_RDWR);
-    if (file < 0) {
-        perror("Error al abrir el bus I2C");
-        return 1;
-    }
-
-    // Establecer la dirección del Arduino en el bus I2C
-    if (ioctl(file, I2C_SLAVE, ARDUINO_ADDRESS) < 0) {
-        perror("Error al establecer la dirección del Arduino I2C");
-        close(file);
-        return 1;
-    }
-
-    int canal, valor;
     int channel, message;
-
     while (1) {
-        printf("Canal (1Byte): ");
-        scanf("%d", &canal);
+        printf("Enviar mensaje. 0 No/1 Sí: ");
+        int option;
+        scanf("%d", &option);
 
-        printf("Valor (2Bytes): ");
-        scanf("%d", &valor);
+        if (option) {
+            int byte1, byte2, byte3, twoBytes;
+            printf("Canal (1Byte): ");
+            scanf("%d", &byte1);
+            printf("Valor (1Bytes): ");
+            scanf("%d", &byte2);
+            printf("Valor (1Bytes): ");
+            scanf("%d", &byte3);
+            printf("Valor (2Bytes): ");
+            scanf("%d", &twoBytes);
 
-        enviar_entero(canal, valor, file);
-        usleep(100000);  // Esperar 0.1 segundos
+            send_1byte_1byte_1byte_2byte(byte1, byte2, byte3, twoBytes);
+        } else {
+            int byte1;
+            printf("Canal (1Byte): ");
+            scanf("%d", &byte1);
 
-        if (readNumber(file, &channel, &message) != 0) {
-            close(file);
-            return 1;
+            send_1byte(byte1);
         }
 
+        usleep(100000);
+        read_1byte_2bytes(&channel, &message);
         printf("Respuesta recibida: Canal = %d, Mensaje = %d\n", channel, message);
     }
 
-    // Cerrar el bus I2C
-    close(file);
+    close(arduino_bus);
 
     return 0;
 }
+

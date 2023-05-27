@@ -1,6 +1,7 @@
 #include "Encoder.h"
 #include "Motor.h"
 #include "UltrasoundSensor.h"
+#include "led.h"
 #include <Wire.h>
 #include <string.h>
 #include <stdio.h>
@@ -15,6 +16,9 @@ UltrasoundSensor ultrasoundsensorRight(22, 23);
 
 Motor motorLeft(13, 38, 39);
 Motor motorRight(12, 40, 41);
+
+Led led(6, 256);  // Configurar el objeto Led con el pin y el número de LEDs
+
 
 int encoder_left_final_position = -1;
 int encoder_right_final_position = -1;
@@ -45,6 +49,8 @@ void updateEncoderLeft() {
   if (abs(encoderLeft.read()) >= abs(encoder_left_final_position)) {
     motorLeft.stop(); // Paramos el motor
     encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    //led.off();
+    led.ide();
   }
 }
 
@@ -55,6 +61,8 @@ void updateEncoderRight() {
   if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
     motorRight.stop(); // Paramos el motor
     encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    //led.off();
+    led.ide();
   }
 }
 
@@ -106,9 +114,32 @@ void setup() {
   Wire.onReceive(i2c_interrupcion);
   Wire.onRequest(i2c_sendData);
 
+  led.begin();  // Iniciar los LEDs NeoPixel
+  led.startup();
 }
 
 void loop() {
+  
+  /*
+  led.stop();  // Mostrar color rojo
+  delay(2000);
+  
+  led.forward();  // Mostrar color verde
+  delay(2000);
+
+  led.backward();
+  delay(2000);
+
+  led.ide();
+*/
+  //delay(2000);
+  //delay(2000);*/
+  /*
+  led.arrowLeft();
+  led.arrowRight();
+*/  
+  //led.ide();
+
   if (i2c_interrupt){
     response_i2c = I2C().i2cInteruptions(channel_received_i2c, message_i2c);
     repsonse_channel = channel_received_i2c;
@@ -126,16 +157,19 @@ void loop() {
     i2c_interrupt = false;
   }
 
+  /*
+
   if (count_loop > 50){
 
     if ((ultrasoundsensorLeft.ping_blocking() <= ultrasonic_limit) || (ultrasoundsensorRight.ping_blocking() <= ultrasonic_limit)) { // Comprobamos si hemos llegado a una distancia limite.
       motorLeft.stop();
       motorRight.stop();
+      led.stop();
     }
 
     count_loop = 0;
   }
 
   count_loop += 1;
-
+  */
 }
