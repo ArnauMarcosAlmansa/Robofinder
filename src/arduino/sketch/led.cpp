@@ -59,7 +59,7 @@ void Led::arrowLeft() {
   pixels.show(); // Mostrar los LEDs apagados
 
   // Pixeles que forman la cabeza de la flecha.
-  int arrowLeft[] = {10,13,17,18,21,22,24,25,30,31,32,39,3,4,11,12,19,20,27,28,35,36,43,44,51,52,59,60,67,68,75,76};
+  int arrowLeft[] = {10, 13, 17, 18, 21, 22, 24, 25, 30, 31, 32, 39, 3, 4, 11, 12, 19, 20, 27, 28, 35, 36, 43, 44, 51, 52, 59, 60, 67, 68, 75, 76};
   int numValues = sizeof(arrowLeft) / sizeof(arrowLeft[0]);
   for (int i = 0; i < numValues; i++) {
     int value = arrowLeft[i];
@@ -69,18 +69,20 @@ void Led::arrowLeft() {
 
   // Pixeles que forman la cola de la flecha.
   // Encender.
-  for (int i=32; i>9; i--) {
-    pixels.setPixelColor((i*8)+3, pixels.Color(252, 72, 0));
-    pixels.setPixelColor((i*8)+4, pixels.Color(252, 72, 0));
+  for (int i = 32; i > 9; i--) {
+    int pixelIndex = (i * 8) + 3;
+    pixels.setPixelColor(pixelIndex, pixels.Color(252, 72, 0));
+    pixels.setPixelColor(pixelIndex + 1, pixels.Color(252, 72, 0));
     pixels.show();
     delay(30);
   }
   pixels.show();
 
   // Apagar
-  for (int i=32; i>9; i--) {
-    pixels.setPixelColor((i*8)+3, pixels.Color(0, 0, 0));
-    pixels.setPixelColor((i*8)+4, pixels.Color(0, 0, 0));
+  for (int i = 32; i > 9; i--) {
+    int pixelIndex = (i * 8) + 3;
+    pixels.setPixelColor(pixelIndex, pixels.Color(0, 0, 0));
+    pixels.setPixelColor(pixelIndex + 1, pixels.Color(0, 0, 0));
   }
   pixels.show();
 
@@ -98,22 +100,23 @@ void Led::arrowRight() {
     int value = arrowRight[i];
     pixels.setPixelColor(value, pixels.Color(252, 72, 0));
   }
-  pixels.show();
 
   // Pixeles que forman la cola de la flecha.
   // Encender.
-  for (int i=0; i<23; i++) {
-    pixels.setPixelColor((i*8)+3, pixels.Color(252, 72, 0));
-    pixels.setPixelColor((i*8)+4, pixels.Color(252, 72, 0));
+  for (int i = 0; i < 23; i++) {
+    int pixelIndex = (i * 8) + 3;
+    pixels.setPixelColor(pixelIndex, pixels.Color(252, 72, 0));
+    pixels.setPixelColor(pixelIndex + 1, pixels.Color(252, 72, 0));
     pixels.show();
     delay(30);
   }
   pixels.show();
 
   // Apagar
-  for (int i=0; i<23; i++) {
-    pixels.setPixelColor((i*8)+3, pixels.Color(0, 0, 0));
-    pixels.setPixelColor((i*8)+4, pixels.Color(0, 0, 0));
+  for (int i = 0; i < 23; i++) {
+    int pixelIndex = (i * 8) + 3;
+    pixels.setPixelColor(pixelIndex, pixels.Color(0, 0, 0));
+    pixels.setPixelColor(pixelIndex + 1, pixels.Color(0, 0, 0));
   }
   pixels.show();
 
@@ -146,6 +149,32 @@ void Led::ide() {
   //}
 }
 
+
+
+void Led::rainbowCycle(uint8_t wait) {
+  for (uint16_t j = 0; j < 256; j++) {
+    for (uint16_t i = 0; i < pixels.numPixels(); i++) {
+      pixels.setPixelColor(i, Wheel(((i * 256 / pixels.numPixels()) + j) & 255));
+    }
+    pixels.show();
+    //delay(wait);
+  }
+}
+
+uint32_t Led::Wheel(byte WheelPos) {
+  if (WheelPos < 85) {
+    return pixels.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  } else if (WheelPos < 170) {
+    WheelPos -= 85;
+    return pixels.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } else {
+    WheelPos -= 170;
+    return pixels.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+}
+
+/*
+
 void Led::colorWipe(uint32_t c, uint8_t wait) {
   for (uint16_t i = 0; i < pixels.numPixels(); i++) {
     pixels.setPixelColor(i, c);
@@ -161,16 +190,6 @@ void Led::rainbow(uint8_t wait) {
     }
     pixels.show();
     delay(wait);
-  }
-}
-
-void Led::rainbowCycle(uint8_t wait) {
-  for (uint16_t j = 0; j < 256; j++) {
-    for (uint16_t i = 0; i < pixels.numPixels(); i++) {
-      pixels.setPixelColor(i, Wheel(((i * 256 / pixels.numPixels()) + j) & 255));
-    }
-    pixels.show();
-    //delay(wait);
   }
 }
 
@@ -202,14 +221,4 @@ void Led::theaterChaseRainbow(uint8_t wait) {
   }
 }
 
-uint32_t Led::Wheel(byte WheelPos) {
-  if (WheelPos < 85) {
-    return pixels.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-  } else if (WheelPos < 170) {
-    WheelPos -= 85;
-    return pixels.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  } else {
-    WheelPos -= 170;
-    return pixels.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  }
-}
+*/
