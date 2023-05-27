@@ -154,14 +154,24 @@ auto main() -> int {
 	SetExposure(50);
 	SetLed(25);
 
-  extrinsic_translation = extrinsic_translation * 100;
+    extrinsic_translation = extrinsic_translation * 100;
 
-  cv::Ptr<cv::Feature2D> feature_detector = cv::SIFT::create();
-  cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("FlannBased");
+    cv::Ptr<cv::Feature2D> feature_detector = cv::SIFT::create();
+    cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("FlannBased");
+
+
+    // Capture DUO frame
+	PDUOFrame pFrameData = NULL;
+
+    while (!pFrameData)
+        pFrameData = GetDUOFrame();
+
+    // LAS PUTAS CAMARAS ESTAN GIRADAS
+    cv::Mat previous_left_frame { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->rightData };
 
 	// Run capture loop until <Esc> key is pressed
 	// while((cv::waitKey(1) & 0xff) != 27)
-  for (int iter = 0; iter < 100; iter++)
+    for (int iter = 0; iter < 100; iter++)
 	{
 		// Capture DUO frame
 		PDUOFrame pFrameData = GetDUOFrame();
@@ -171,6 +181,15 @@ auto main() -> int {
     // LAS PUTAS CAMARAS ESTAN GIRADAS
     cv::Mat left { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->rightData };
     cv::Mat right { cv::Size(WIDTH, HEIGHT), CV_8UC1, pFrameData->leftData };
+
+
+    cv::Mat diff;
+    cv::absdiff(left, previous_left_frame, diff);
+    
+    double sum = cv::sum(diff)[0];
+    if (sum > HEIGHT * WIDTH * 255 * 0.5)
+        continue;
+
 
     std::vector<cv::KeyPoint> keypoints_left, keypoints_right;
     cv::Mat descriptors_left, descriptors_right;
@@ -216,6 +235,9 @@ auto main() -> int {
 
     std::cout << "p1.size() = " << p1.size() << std::endl;
 
+    if (p1.size() == 0)
+      continue;
+
     cv::Mat rotation_left = extrinsic_rotation * rotation, translation_left = extrinsic_translation + translation;
     cv::Mat rotation_right = rotation, translation_right = translation;
 
@@ -236,6 +258,7 @@ auto main() -> int {
     std::cout << "rows = " <<  rows << std::endl;
     std::cout << "cols = " <<  cols << std::endl;
     std::cout << "total = " <<  homogeneous_points.total() << std::endl;
+    std::cout << std::flush;
 
     std::vector<cv::Point3f> points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
@@ -253,10 +276,11 @@ auto main() -> int {
         */
     }
 
-    std::cout << std::endl;
+        std::cout << std::endl;
 
 		// Display images
 		cv::imshow("Output", output);
+        previous_left_frame = left;
 	}
 
 	cv::destroyAllWindows();
