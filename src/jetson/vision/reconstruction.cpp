@@ -94,7 +94,7 @@ cv::Mat proj2 = (cv::Mat_<float>(3, 4) <<
 
 auto main() -> int {
 	printf("DUOLib Version:       v%s\n", GetDUOLibVersion());
-  octomap::OcTree tree(0.05);
+    octomap::OcTree tree(0.05);
 	// Open DUO camera and start capturing
 	if(!OpenDUOCamera(WIDTH, HEIGHT, FPS))
 	{
