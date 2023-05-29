@@ -7,8 +7,8 @@ public:
     void turn(float radians);
     void move(float meters);
 
-    const cv::Mat& get_position() const;
-    const cv::Mat& get_orientation() const;
+    cv::Mat& get_position();
+    cv::Mat& get_orientation();
 private:
     cv::Mat position;
     cv::Mat orientation;

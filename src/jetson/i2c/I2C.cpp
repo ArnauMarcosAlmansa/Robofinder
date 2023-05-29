@@ -1,4 +1,5 @@
 #include "I2C.h"
+#include <stdexcept>
 
 I2C::I2C() : bus(-1) {}
 
@@ -80,65 +81,78 @@ void I2C::right(int vel_left, int vel_right, int encoder_value) {
 }
 
 void I2C::stop() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::STOP), sizeof(MessageType::STOP));
+    uint8_t buffer[1] = {static_cast<uint8_t>(MessageType::STOP)};
+
+    writeBytes(buffer, sizeof(buffer));
 }
 
-void I2C::getEncoderLeft() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::READ_ENCODER_LEFT), sizeof(MessageType::READ_ENCODER_LEFT));
+std::pair<int, int> I2C::getEncoderLeft() {
+    uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::READ_ENCODER_LEFT)};
+    writeBytes(send_buffer, sizeof(send_buffer));
 
     uint8_t buffer[3];
     if (!readBytes(buffer, sizeof(buffer)))
-        break;
+        throw std::runtime_error("No se ha leido.");
 
-    channel = buffer[0];
-    message = (buffer[1] << 8) | buffer[2];
-    return (channel, message)
+    int channel = buffer[0];
+    int message = (buffer[1] << 8) | buffer[2];
+    return std::make_pair(channel, message);
 }
 
-void I2C::getEncoderRight() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::READ_ENCODER_RIGHT), sizeof(MessageType::READ_ENCODER_RIGHT));
+std::pair<int, int> I2C::getEncoderRight() {
+    uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::READ_ENCODER_RIGHT)};
+    writeBytes(send_buffer, sizeof(send_buffer));
 
     uint8_t buffer[3];
     if (!readBytes(buffer, sizeof(buffer)))
-        break;
+        throw std::runtime_error("No se ha leido.");
 
-    channel = buffer[0];
-    message = (buffer[1] << 8) | buffer[2];
-    return (channel, message)
+    int channel = buffer[0];
+    int message = (buffer[1] << 8) | buffer[2];
+    return std::make_pair(channel, message);
 }
 
 void I2C::resetEncoderLeft() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::RESET_ENCODER_LEFT), sizeof(MessageType::RESET_ENCODER_LEFT));
+    uint8_t buffer[1] = {static_cast<uint8_t>(MessageType::RESET_ENCODER_LEFT)};
+
+    writeBytes(buffer, sizeof(buffer));
 }
 
 void I2C::resetEncoderRight() {
-    resetEncoderRight(reinterpret_cast<const uint8_t *>(&MessageType::RESET_ENCODER_RIGHT), sizeof(MessageType::RESET_ENCODER_RIGHT));
+    uint8_t buffer[1] = {static_cast<uint8_t>(MessageType::RESET_ENCODER_RIGHT)};
+
+    writeBytes(buffer, sizeof(buffer));
 }
 
 void I2C::getUltrasonicLeft() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::ULTRASOUND_LEFT), sizeof(MessageType::ULTRASOUND_LEFT));
+    uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::ULTRASOUND_LEFT)};
+    writeBytes(send_buffer, sizeof(send_buffer));
 
     uint8_t buffer[3];
     if (!readBytes(buffer, sizeof(buffer)))
-        break;
+        return;
 
-    channel = buffer[0];
-    message = (buffer[1] << 8) | buffer[2];
-    return (channel, message)
+    int channel = buffer[0];
+    int message = (buffer[1] << 8) | buffer[2];
+    return;
+    // return (channel, message);
 }
 
 void I2C::getUltrasonicRight() {
-    writeBytes(reinterpret_cast<const uint8_t *>(&MessageType::ULTRASOUND_RIGHT), sizeof(MessageType::ULTRASOUND_RIGHT));
+    uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::ULTRASOUND_RIGHT)};
+    writeBytes(send_buffer, sizeof(send_buffer));
 
     uint8_t buffer[3];
     if (!readBytes(buffer, sizeof(buffer)))
-        break;
+        return;
 
-    channel = buffer[0];
-    message = (buffer[1] << 8) | buffer[2];
-    return (channel, message)
+    int channel = buffer[0];
+    int message = (buffer[1] << 8) | buffer[2];
+    return;
+    // return (channel, message);
 }
 
 void I2C::ledOff() {
-    resetEncoderRight(reinterpret_cast<const uint8_t *>(&MessageType::LED_OFF), sizeof(MessageType::LED_OFF));
+    uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::LED_OFF)};
+    writeBytes(send_buffer, sizeof(send_buffer));
 }

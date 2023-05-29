@@ -6,6 +6,7 @@
 
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 
 Vision::Vision(struct CameraParams params)
 {
@@ -48,7 +49,7 @@ Vision::Vision(struct CameraParams params)
     );
 
     if(!OpenDUOCamera(params.width, params.height, params.fps))
-        throw std:: runtime_error("Failed to open DUO3D camera.");
+        throw std::runtime_error("Failed to open DUO3D camera.");
 
 
     SetGain(params.gain);
@@ -68,6 +69,13 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     cv::Mat left { cv::Size(params.width, params.height), CV_8UC1, pFrameData->leftData };
     cv::Mat right { cv::Size(params.width, params.height), CV_8UC1, pFrameData->rightData };
+
+    cv::imshow("Left", left);
+    cv::imshow("Right", right);
+
+    double min, max;
+    cv::minMaxLoc(left, &min, &max);
+    std::cout << "left (min, max) = (" << min << ", " << max << ")" << std::endl;
 
     cv::cuda::GpuMat gpu_left, gpu_right;
     gpu_left.upload(left);

@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
+#include <utility>
+
 
 #define ARDUINO_ADDRESS 0x30
 
@@ -43,8 +45,8 @@ public:
 
     void stop();
 
-    void getEncoderLeft();
-    void getEncoderRight();
+    std::pair<int, int> getEncoderLeft();
+    std::pair<int, int> getEncoderRight();
 
     void resetEncoderLeft();
     void resetEncoderRight();
