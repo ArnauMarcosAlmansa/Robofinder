@@ -6,6 +6,15 @@
 
 #define ARDUINO_ADDRESS 0x30
 
+
+enum class MessageType : byte
+{
+    FORWARD = 11,
+    BACKWARD = 12,
+    TURN_LEFT = 13,
+    TURN_RIGHT = 14,
+}
+
 class I2C {
 private:
     int bus;

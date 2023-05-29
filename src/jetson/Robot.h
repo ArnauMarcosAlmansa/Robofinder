@@ -8,7 +8,7 @@ public:
     void move(float meters);
 
     const cv::Mat& get_position() const;
-    const cv::Mat& get_rotation() const;
+    const cv::Mat& get_orientation() const;
 private:
     cv::Mat position;
     cv::Mat orientation;

@@ -40,3 +40,17 @@ void Robot::move(float meters)
     position = position + movement;
 }
 
+
+const cv::Mat& Robot::get_position() const
+{
+    return position;
+}
+
+
+const cv::Mat& Robot::get_orientation() const
+{
+    return orientation;
+}
+
+
+
