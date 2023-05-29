@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
@@ -7,13 +8,13 @@
 #define ARDUINO_ADDRESS 0x30
 
 
-enum class MessageType : byte
+enum class MessageType : unsigned char
 {
     FORWARD = 11,
     BACKWARD = 12,
     TURN_LEFT = 13,
     TURN_RIGHT = 14,
-}
+};
 
 class I2C {
 private:

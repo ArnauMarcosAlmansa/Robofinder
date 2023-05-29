@@ -1,7 +1,7 @@
 #include "Map.h"
 
-Map::Map(float resolution) {
-    this->tree = octomap::OcTree tree(resolution);
+Map::Map(float resolution) : tree(resolution) {
+
 };
 
 void Map::SaveMapToFile(std::string filename){

@@ -1,6 +1,7 @@
 #include "Robot.h"
 #include "vision/Vision.h"
 #include "i2c/I2C.h"
+#include "map/Map.h"
 #include <iostream>
 
 
