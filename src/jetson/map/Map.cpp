@@ -13,13 +13,13 @@ void Map::SaveMapToFile(std::string filename){
 };
 
 void Map::InsertPointInTree(cv::Point3f point){
-    octomap::point3d pointOctomap(point.x, point.y, point.z);
+    octomap::point3d pointOctomap(-point.z, point.x, point.y);
     this->tree.updateNode(pointOctomap, true);  // Insertar el punto en el árbol
 };
 
 void Map::InsertPointsInTree(std::vector<cv::Point3f> points){
     for (auto& p : points) {
-        octomap::point3d pointOctomap(p.x, p.y, p.z);
+        octomap::point3d pointOctomap(-p.z, p.x, p.y);
         tree.updateNode(pointOctomap, true);  // Insertar el punto en el árbol
 	}
 };
