@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <linux/i2c-dev.h>
+#include "i2c.h"
 #include <utility>
 
 
@@ -27,13 +27,12 @@ enum class MessageType : unsigned char
 
 class I2C {
 private:
-    int bus;
+    I2CDevice device;
 
 public:
     I2C();
+    I2C(const std::string& device, int address);
     ~I2C();
-    bool openBus(const std::string& device);
-    bool setAddress(int address);
     bool readBytes(uint8_t* buffer, size_t size);
     bool writeBytes(const uint8_t* buffer, size_t size);
     void closeBus();

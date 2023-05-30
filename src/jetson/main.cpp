@@ -15,19 +15,16 @@ auto main() -> int
 {
     Robot robot;
     Vision vision(camera_params);
-    I2C i2c;
+    I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.1);
-
-    i2c.openBus("/dev/i2c-1");
-    i2c.setAddress(ARDUINO_ADDRESS);
 
     cv::Mat origin = robot.get_position();
 
     auto start = std::chrono::steady_clock::now();
 
-    // i2c.forward(100, 100, 24);
-    unsigned char msg[4] = {11, 100, 100, 24};
-    i2c.writeBytes(msg, 4);
+    i2c.forward(100, 100, 24);
+    // unsigned char msg[4] = {11, 100, 100, 24};
+    // i2c.writeBytes(msg, 4);
 
     while (true)
     {

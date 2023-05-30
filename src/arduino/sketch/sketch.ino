@@ -23,7 +23,45 @@ Led led(6, 256);  // Configurar el objeto Led con el pin y el número de LEDs
 int encoder_left_final_position = -1;
 int encoder_right_final_position = -1;
 
-int bytes_messages_i2c[40] = {0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; // Numero de Bytes que tendran los mensajes por canal (Numero -1). El canal es el indice de la lista.
+int bytes_messages_i2c[40] = {
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  4,
+  4,
+  4,
+  4,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+  }; // Numero de Bytes que tendran los mensajes por canal (Numero -1). El canal es el indice de la lista.
 
 #include "i2c.h"
 
@@ -67,22 +105,32 @@ void updateEncoderRight() {
 }
 
 void i2c_interrupcion() {
+  Serial.println("i2c_interrupcion START");
+  Serial.print("AVAILABLE BEGINNING: ");
+  Serial.println(Wire.available());
   // Comprobamos si tenemos un canal guardado. Sino tenemos ninguno, el mensaje sera el canal.
-  if (channel_received_i2c == 0) {
-    channel_received_i2c = Wire.read();                                 // Leemos el valor y lo guardamos.
-    total_number_message = bytes_messages_i2c[channel_received_i2c];    // Miramos el numero de bytes de los mensajes que tendremos para el canal recibido.
-    
-    if (total_number_message == 0) {
-      i2c_interrupt = true;
-    }
-  } else {                                              // Si tenemos el canal guardado. Estamos recibindo el mensaje. 
-    message_i2c[message_count] = Wire.read();    // Guardamos el mensaje en la array de bytes.
-    message_count++;                                    // Sumamos 1 al contador.
-    if (message_count == total_number_message) {        // Si el contador de mensajes recibidos es igual al numero de mensajes para el canal que hemos establecido. Marcamos la interupccion.
-      i2c_interrupt = true;                             // Esta interupcion funciona sobre el propio main.
-    }
 
+  channel_received_i2c = Wire.read();                                 // Leemos el valor y lo guardamos.
+  total_number_message = bytes_messages_i2c[channel_received_i2c];    // Miramos el numero de bytes de los mensajes que tendremos para el canal recibido.
+  
+  message_count = 0;
+  while (message_count < total_number_message) {
+    message_i2c[message_count] = Wire.read();
+    message_count++;   
   }
+
+  response_i2c = I2C().i2cInteruptions(channel_received_i2c, message_i2c);
+  repsonse_channel = channel_received_i2c;
+
+  for (int i=0; i<= 4; i++) {
+    message_i2c[i] = 0;
+  }
+  
+  total_number_message = 0;
+  message_count = 0;
+  Serial.print("AVAILABLE END: ");
+  Serial.println(Wire.available());
+  Serial.println("i2c_interrupcion END");
 }
 
 void i2c_sendData() { 
@@ -103,6 +151,7 @@ void i2c_sendData() {
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial.println("BEGIN");
   attachInterrupt(digitalPinToInterrupt(18), updateEncoderLeft, CHANGE);
   attachInterrupt(digitalPinToInterrupt(19), updateEncoderLeft, CHANGE);
 
@@ -119,6 +168,10 @@ void setup() {
 }
 
 void loop() {
+
+  // Serial.println("LOOP START");
+  delay(1000);
+  // Serial.println("LOOP END");
   
   /*
   led.stop();  // Mostrar color rojo
@@ -139,23 +192,6 @@ void loop() {
   led.arrowRight();
 */  
   //led.ide();
-
-  if (i2c_interrupt){
-    response_i2c = I2C().i2cInteruptions(channel_received_i2c, message_i2c);
-    repsonse_channel = channel_received_i2c;
-    channel_received_i2c = 0;
-    /*byte1_received_message_i2c = 0;
-    received_message_i2c = 0;*/
-    
-    for (int i=0; i<=4; i++) {
-      message_i2c[i] = 0;
-    }
-    
-    total_number_message = 0;
-    message_count = 0;
-
-    i2c_interrupt = false;
-  }
 
   /*
 
