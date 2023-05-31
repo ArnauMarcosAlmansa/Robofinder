@@ -22,29 +22,29 @@ auto main() -> int
 
     auto start = std::chrono::steady_clock::now();
 
-    i2c.forward(100, 100, 24);
-    // unsigned char msg[4] = {11, 100, 100, 24};
-    // i2c.writeBytes(msg, 4);
+    i2c.forward(50, 50, 24);
+    unsigned char msg[4] = {11, 100, 100, 24};
+    i2c.writeBytes(msg, 4);
 
     while (true)
     {
-        // auto value_left = i2c.getEncoderLeft().second;
-        // auto value_right = i2c.getEncoderRight().second;
+        //auto value_left = i2c.getEncoderLeft().second;
+        //auto value_right = i2c.getEncoderRight().second;
 
-        // auto value = ((double) value_left + (double) value_right) / 2.0;
+        //auto value = ((double) value_left + (double) value_right) / 2.0;
 
-        // robot.move(value / 12 * WHEEL_CIRCUMFERENCE);
+        //robot.move(value / 12 * WHEEL_CIRCUMFERENCE);
 
         std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
-        map.InsertPointsInTree(points);
+	    map.InsertPointsInTree(points);
 
         if (std::chrono::steady_clock::now() - start > std::chrono::seconds(5))
             break;
-
         robot.get_position() = origin;
     }
 
     i2c.stop();
 
     map.SaveMapToFile("vista.bt");
+    return 0;
 }
