@@ -23,6 +23,8 @@ Led led(6, 256);  // Configurar el objeto Led con el pin y el número de LEDs
 int encoder_left_final_position = -1;
 int encoder_right_final_position = -1;
 
+// bool send_pending = false;
+
 int bytes_messages_i2c[40] = {
   0,
   0,
@@ -165,12 +167,45 @@ void i2c_interrupcion() {
   
   total_number_message = 0;
   message_count = 0;
+
+  //  send_pending = true;
+
   // Serial.print("AVAILABLE END: ");
   // Serial.println(Wire.available());
   // Serial.println("i2c_interrupcion END");
 }
 
 void i2c_sendData() { 
+  // Serial.println("Send Data");
+/*
+  Wire.write(repsonse_channel);
+
+  byte byte1 = response_i2c & 0xFF; // obtiene los 8 bits menos significativos
+  Wire.write(byte1);
+  
+  byte byte2 = (response_i2c >> 8) & 0xFF; // desplaza 8 bits hacia la derecha y obtiene los siguientes 8 bits
+  Wire.write(byte2);
+*/
+//  Wire.beginTransmission(0x30);
+/*
+
+  byte byte1 = response_i2c & 0xFF; // obtiene los 8 bits menos significativos
+  byte byte2 = (response_i2c >> 8) & 0xFF; // desplaza 8 bits hacia la derecha y obtiene los siguientes 8 bits
+  
+  byte msg[3];
+  msg[0] = repsonse_channel;
+  msg[1] = byte1;
+  msg[2] = byte2;
+
+  Serial.println(msg[0]);
+  Serial.println(msg[1]);
+  Serial.println(msg[2]);
+
+
+  Wire.write(msg, 3);
+*/
+  //Wire.endTransmission(0x30);
+
   if (response_count == 0) {
      Wire.write(repsonse_channel);
      response_count = 1;
@@ -183,6 +218,8 @@ void i2c_sendData() {
     Wire.write(byte2);
     response_count = 0;
   }
+
+
 }
 
 void setup() {
@@ -206,6 +243,16 @@ void setup() {
 }
 
 void loop() {
+
+  /*
+ 
+  if (send_pending){
+    i2c_sendData();
+    response_i2c = 0;
+    send_pending = false;
+  }
+  
+  */
 
   // // Serial.println("LOOP START");
   // delay(1000);
