@@ -69,7 +69,7 @@ std::pair<bool, int> Robot::rad_to_pulses(float rad) {
 }
 
 
-float Robot::rad_to_pulses(bool direction_of_rotation, int pulses) {
+float Robot::pulses_to_rad(bool direction_of_rotation, int pulses) {
     float dis = pulses_to_meters(pulses);
     float rad = (dis / (PI * WHEEL_DISTANCE )) * (2 * PI);
 

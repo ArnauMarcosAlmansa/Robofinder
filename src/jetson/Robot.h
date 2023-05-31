@@ -16,6 +16,7 @@ public:
     int meters_to_pulses(float meters);
 
     std::pair<bool, int> rad_to_pulses(float rad);
+    float Robot::pulses_to_rad(bool direction_of_rotation, int pulses);
 
     cv::Mat& get_position();
     cv::Mat& get_orientation();
