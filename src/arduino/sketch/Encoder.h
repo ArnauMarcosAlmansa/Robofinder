@@ -6,6 +6,7 @@ class Encoder
     int pin_a = -1;
     int pin_b = -1;
 
+
     long value = 0;
     long correct_value = 0;
 
@@ -19,4 +20,6 @@ class Encoder
     void reset();
     void update();
     long read();
+
+    long updates = 0;
 };

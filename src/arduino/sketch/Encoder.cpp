@@ -3,6 +3,7 @@
 
 void Encoder::reset()
 {
+  updates = 0;
   value = 0;
   correct_value = 0;
   last_encoded = 0;
@@ -20,6 +21,7 @@ void Encoder::update()
   if(sum == 0b1110 || sum == 0b0111 || sum == 0b0001 || sum == 0b1000) value --;
  
   last_encoded = encoded; //store this value for next time
+  updates++;
 }
 
 long Encoder::read()

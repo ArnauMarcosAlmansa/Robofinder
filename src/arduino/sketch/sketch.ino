@@ -80,34 +80,71 @@ uint8_t message_i2c[4] = {0,0,0,0};     // Mensajes de recibimos de 1Bytes cada 
 int count_loop = 0;                     // Contador de iteraciones en el loop. Para realizar la medicion de los ultrasonidos.
 int ultrasonic_limit = 10;              // Limite de distancia en el que los ultrasonidos pararan el movimineto del robot.
 
-void updateEncoderLeft() {
+
+void updateEncoders() {
   encoderLeft.update();
+  encoderRight.update();
 
   // Comprobamos si el motor ha llegado a la posicion que queremos.
   if (abs(encoderLeft.read()) >= abs(encoder_left_final_position)) {
     motorLeft.stop(); // Paramos el motor
     encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
     //led.off();
-    led.ide();
+    //led.ide();
+  }
+
+  // Comprobamos si el motor ha llegado a la posicion que queremos.
+  if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
+    motorRight.stop(); // Paramos el motor
+    encoder_right_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    //led.off();
+    //led.ide();
+  }
+}
+
+void updateEncoderLeft() {
+  encoderLeft.update();
+
+  // Serial.print("ENCODER LEFT VALUE: ");
+  // Serial.println(abs(encoderLeft.read()));
+  // Serial.print("ENCODER LEFT FINAL: ");
+  // Serial.println(abs(encoder_left_final_position));
+  // Serial.print("UPDATE LEFT #");
+  // Serial.println(encoderLeft.updates);
+
+  // Comprobamos si el motor ha llegado a la posicion que queremos.
+  if (abs(encoderLeft.read()) >= abs(encoder_left_final_position)) {
+    motorLeft.stop(); // Paramos el motor
+    encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    //led.off();
+    //led.ide();
   }
 }
 
 void updateEncoderRight() {
   encoderRight.update();
 
+  // Serial.print("ENCODER RIGHT VALUE: ");
+  // Serial.println(abs(encoderRight.read()));
+  // Serial.print("ENCODER RIGHT FINAL: ");
+  // Serial.println(abs(encoder_right_final_position));
+  // Serial.print("UPDATE RIGHT #");
+  // Serial.println(encoderRight.updates);
+
+
   // Comprobamos si el motor ha llegado a la posicion que queremos.
   if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
     motorRight.stop(); // Paramos el motor
-    encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    encoder_right_final_position = 0; // Reiniciamos la variable con un valor no valido.
     //led.off();
-    led.ide();
+    //led.ide();
   }
 }
 
 void i2c_interrupcion() {
-  Serial.println("i2c_interrupcion START");
-  Serial.print("AVAILABLE BEGINNING: ");
-  Serial.println(Wire.available());
+  // Serial.println("i2c_interrupcion START");
+  // Serial.print("AVAILABLE BEGINNING: ");
+  // Serial.println(Wire.available());
   // Comprobamos si tenemos un canal guardado. Sino tenemos ninguno, el mensaje sera el canal.
 
   channel_received_i2c = Wire.read();                                 // Leemos el valor y lo guardamos.
@@ -128,9 +165,9 @@ void i2c_interrupcion() {
   
   total_number_message = 0;
   message_count = 0;
-  Serial.print("AVAILABLE END: ");
-  Serial.println(Wire.available());
-  Serial.println("i2c_interrupcion END");
+  // Serial.print("AVAILABLE END: ");
+  // Serial.println(Wire.available());
+  // Serial.println("i2c_interrupcion END");
 }
 
 void i2c_sendData() { 
@@ -150,13 +187,14 @@ void i2c_sendData() {
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  Serial.println("BEGIN");
-  attachInterrupt(digitalPinToInterrupt(18), updateEncoderLeft, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(19), updateEncoderLeft, CHANGE);
+  // Serial.begin(9600);
+  // Serial.println("BEGIN");
 
-  attachInterrupt(digitalPinToInterrupt(2), updateEncoderRight, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(3), updateEncoderRight, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(2), updateEncoders, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(3), updateEncoders, CHANGE);
+
+  attachInterrupt(digitalPinToInterrupt(18), updateEncoders, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(19), updateEncoders, CHANGE);
 
   //attachInterrupt(digitalPinToInterrupt(SDA), i2c_interrupcion, RISING); // Seria para un arduino master no esclavo.
   Wire.begin(0x30);
@@ -169,9 +207,9 @@ void setup() {
 
 void loop() {
 
-  // Serial.println("LOOP START");
-  delay(1000);
-  // Serial.println("LOOP END");
+  // // Serial.println("LOOP START");
+  // delay(1000);
+  // // Serial.println("LOOP END");
   
   /*
   led.stop();  // Mostrar color rojo

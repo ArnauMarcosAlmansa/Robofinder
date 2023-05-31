@@ -19,12 +19,12 @@ void I2C::setDefaultSpeed(int speedLeft, int speedRight)
 
 int I2C::i2cInteruptions(int channel, uint8_t message[4])
   {
-  Serial.print("Canal ");
-  Serial.println(channel);
-  Serial.print("Valor ");
-  Serial.println(message[0]);
-  Serial.println(message[1]);
-  Serial.println((message[3] << 8) | message[2]);
+  // Serial.print("Canal ");
+  // Serial.println(channel);
+  // Serial.print("Valor ");
+  // Serial.println(message[0]);
+  // Serial.println(message[1]);
+  // Serial.println((message[3] << 8) | message[2]);
 
   uint16_t encoder_final_position = -1;
 
@@ -34,7 +34,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
     case 10:
       //Enable Motors
       setDefaultSpeed(100,100);
-      Serial.println("Enable Motors");
+      // Serial.println("Enable Motors");
       break;
 
     case 11: // 4 Bytes
@@ -60,7 +60,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Luz led indicadora.
       led.forward();
 
-      Serial.println("Forward");
+      // Serial.println("Forward");
       break;
 
     case 12: // 4 Bytes
@@ -87,7 +87,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Luz led indicadora.
       led.backward();
 
-      Serial.println("Backward");
+      // Serial.println("Backward");
       break;
 
     case 13: // 4 Bytes
@@ -114,7 +114,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Luz led indicadora.
       led.arrowLeft();
 
-      Serial.println("Left");
+      // Serial.println("Left");
       break;
 
     case 14: // 4 Bytes
@@ -141,7 +141,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Luz led indicadora.
       led.arrowRight();
 
-      Serial.println("Right");
+      // Serial.println("Right");
       break;
 
     case 15:
@@ -152,7 +152,7 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       // Luz led indicadora.
       led.stop();
 
-      Serial.println("Stop");
+      // Serial.println("Stop");
       break;
 
 
