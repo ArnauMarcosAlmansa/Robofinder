@@ -24,7 +24,7 @@ void Encoder::update()
   updates++;
 }
 
-long Encoder::read()
+int16_t Encoder::read()
 {
   return value / 4;
 }

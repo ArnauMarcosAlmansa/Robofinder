@@ -19,7 +19,7 @@ class Encoder
     }
     void reset();
     void update();
-    long read();
+    int16_t read();
 
     long updates = 0;
 };

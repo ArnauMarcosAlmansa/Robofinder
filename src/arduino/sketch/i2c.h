@@ -105,8 +105,8 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       encoder_right_final_position = 65536 - encoder_final_position;
       
       // Establecemos la direccion de los motores
-      motorLeft.forward();
-      motorRight.backward();
+      motorLeft.backward();
+      motorRight.forward();
 
       // Damos velocidad a los motores.
       setDefaultSpeed(message[0], message[1]);
@@ -132,8 +132,8 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       encoder_right_final_position = 65536 - encoder_final_position;
 
       // Establecemos la direccion de los motores
-      motorLeft.backward();
-      motorRight.forward();
+      motorLeft.forward();
+      motorRight.backward();
 
       // Damos velocidad a los motores.
       setDefaultSpeed(message[0], message[1]);

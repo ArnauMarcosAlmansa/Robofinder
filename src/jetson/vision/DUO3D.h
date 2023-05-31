@@ -157,8 +157,8 @@ static bool OpenDUOCamera(int width, int height, float fps)
 
 	// Set selected resolution
         SetDUOResolutionInfo(_duo, ri);
-        SetDUOHFlip(_duo,1);
-        SetDUOVFlip(_duo, 1);
+        //SetDUOHFlip(_duo,1);
+        //SetDUOVFlip(_duo, 1);
         SetDUOUndistort(_duo, 1);
 
 	DUO_INTR intrinsics;
