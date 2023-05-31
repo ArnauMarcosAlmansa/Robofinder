@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include "libi2c.h"
+#include <linux/i2c-dev.h>
 #include <utility>
 
 
@@ -28,19 +29,20 @@ enum class MessageType : unsigned char
 class I2C {
 private:
     I2CDevice device;
+    int file_descriptor;
 
 public:
     I2C();
     I2C(const std::string& device, int address);
     ~I2C();
-    bool readBytes(uint8_t* buffer, size_t size);
-    bool writeBytes(const uint8_t* buffer, size_t size);
+    bool readBytes(uint8_t* bytes, size_t len);
+    bool writeBytes(uint8_t* bytes, size_t len); 
     void closeBus();
 
     void forward(int vel_left, int vel_right, int encoder_value);
     void backward(int vel_left, int vel_right, int encoder_value);
-    void left(int vel_left, int vel_right, int encoder_value);
-    void right(int vel_left, int vel_right, int encoder_value);
+    void turn_left(uint8_t vel_left, uint8_t vel_right, uint16_t encoder_value);
+    void turn_right(uint8_t vel_left, uint8_t vel_right, uint16_t encoder_value);
 
     void stop();
 

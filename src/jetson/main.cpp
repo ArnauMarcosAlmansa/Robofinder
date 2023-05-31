@@ -22,14 +22,17 @@ auto main() -> int
 
     auto start = std::chrono::steady_clock::now();
 
-    i2c.forward(50, 50, 24);
-    unsigned char msg[4] = {11, 100, 100, 24};
-    i2c.writeBytes(msg, 4);
+    // i2c.forward(50, 50, 24);
+
+    i2c.turn_right(50, 50, 24);
 
     while (true)
     {
-        //auto value_left = i2c.getEncoderLeft().second;
-        //auto value_right = i2c.getEncoderRight().second;
+        auto value_left = i2c.getEncoderLeft();
+        auto value_right = i2c.getEncoderRight();
+
+        std::cout << "ENCODER LEFT = (" << value_left.first << ", " << value_left.second << ")" << std::endl;
+        std::cout << "ENCODER RIGHT = (" << value_right.first << ", " << value_right.second << ")" << std::endl;
 
         //auto value = ((double) value_left + (double) value_right) / 2.0;
 
