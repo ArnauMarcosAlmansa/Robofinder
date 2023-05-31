@@ -16,7 +16,7 @@ auto main() -> int
     Robot robot;
     Vision vision(camera_params);
     I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
-    Map map(0.1);
+    Map map(0.01);
 
     cv::Mat origin = robot.get_position();
 

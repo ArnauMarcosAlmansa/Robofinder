@@ -31,9 +31,9 @@ Vision::Vision(struct CameraParams params)
     );
 
     extrinsic_translation = (cv::Mat_<float>(3, 1) <<
-        -0.285599996,
-        0.0014802,
-        -0.00491068
+        -28.5599996,
+        0.14802,
+        -0.491068
     );
 
     projection_left = (cv::Mat_<float>(3, 4) <<
@@ -47,6 +47,8 @@ Vision::Vision(struct CameraParams params)
         -0.004478, 0.999988, 0.001871, 0.14802,
         -0.002611, -0.001883, 0.999995, -0.491068
     );
+
+    extrinsic_translation = extrinsic_translation / 1000;
 
     if(!OpenDUOCamera(params.width, params.height, params.fps))
         throw std::runtime_error("Failed to open DUO3D camera.");
