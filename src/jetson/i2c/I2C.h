@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include "i2c.h"
+#include "libi2c.h"
 #include <utility>
 
 

@@ -5,8 +5,8 @@ CXXFLAGS=-O3 -I/usr/local/include/opencv4 -L/usr/local/lib/ -I/usr/include/octom
 map.o: map/Map.cpp map/Map.h
 	$(CC) $(CXXFLAGS) -c map/Map.cpp -o map.o
 
-libi2c.o: i2c/i2c.cpp i2c/i2c.h
-	$(CC) $(CXXFLAGS) -c i2c/i2c.cpp -o libi2c.o
+libi2c.o: i2c/libi2c.cpp i2c/libi2c.h
+	$(CC) $(CXXFLAGS) -c i2c/libi2c.cpp -o libi2c.o
 
 i2c.o: i2c/I2C.cpp i2c/I2C.h i2c/i2c.h
 	$(CC) $(CXXFLAGS) -c i2c/I2C.cpp -o i2c.o
