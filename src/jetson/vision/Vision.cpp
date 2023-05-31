@@ -3,11 +3,13 @@
 #include <stdexcept>
 #include <cmath>
 #include <iostream>
-
+#include "../map/Map.h"
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
+//Map map(0.01);
+//octomap::OcTree tree(0.01);
 Vision::Vision(struct CameraParams params)
 {
     this->params = params;
@@ -36,6 +38,9 @@ Vision::Vision(struct CameraParams params)
         -0.491068
     );
 
+    extrinsic_translation = extrinsic_translation / 1000;
+
+
     projection_left = (cv::Mat_<float>(3, 4) <<
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -48,10 +53,8 @@ Vision::Vision(struct CameraParams params)
         -0.002611, -0.001883, 0.999995, -0.491068
     );
 
-    extrinsic_translation = extrinsic_translation / 1000;
-
     if(!OpenDUOCamera(params.width, params.height, params.fps))
-        throw std::runtime_error("Failed to open DUO3D camera.");
+        throw std:: runtime_error("Failed to open DUO3D camera.");
 
 
     SetGain(params.gain);
@@ -65,6 +68,9 @@ Vision::Vision(struct CameraParams params)
 
 std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orientation)
 {
+    //for (int iter = 0; iter < 100; iter++)
+    //{
+    //    std::cout << "Iter = "<< iter << std::endl;
     PDUOFrame pFrameData = GetDUOFrame();
 	if (pFrameData == NULL)
         throw std:: runtime_error("Failed to read frame from DUO3D camera.");
@@ -72,8 +78,6 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
     cv::Mat left { cv::Size(params.width, params.height), CV_8UC1, pFrameData->leftData };
     cv::Mat right { cv::Size(params.width, params.height), CV_8UC1, pFrameData->rightData };
 
-    cv::imshow("Left", left);
-    cv::imshow("Right", right);
 
     double min, max;
     cv::minMaxLoc(left, &min, &max);
@@ -99,7 +103,23 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
     feature_detector->detectAndCompute(gpu_left,  cv::noArray(), keypoints_left, gpu_descriptors_left);
     feature_detector->detectAndCompute(gpu_right,  cv::noArray(), keypoints_right, gpu_descriptors_right);
 
-    
+    cv::Mat output1, output2;
+    cv::drawKeypoints(left, keypoints_left, output1);
+    cv::drawKeypoints(right, keypoints_right, output2);
+
+    cv::Mat output;
+
+    cv::hconcat(output1, output2, output);
+    std::cout << std::endl;
+
+    // Display images
+    //cv::destroyAllWindows();
+    //cv::imshow("Output", output);
+    //char c=(char)cv::waitKey(1);
+    //if(c==27)
+        //throw std:: runtime_error("Pressed out");
+
+
     std::vector<std::vector<cv::DMatch> > rawMatches;
     std::vector<cv::Point2f> p1, p2;
 
@@ -126,6 +146,7 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     if (p1.size() == 0)
         throw std:: runtime_error("No valid matches.");
+        //continue;
 
     cv::Mat rotation_left = extrinsic_rotation * orientation, translation_left = extrinsic_translation + position;
     cv::Mat rotation_right = orientation, translation_right = position;
@@ -139,7 +160,10 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     std::vector<cv::Point3f> points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
-
+    //map.InsertPointsInTree(points3d);
+    //}
+    //std::string filename = "octree.bt";
+    //map.SaveMapToFile("octree.bt");
     return points3d;
 }
 
@@ -168,4 +192,3 @@ Vision::~Vision()
 {
 	CloseDUOCamera();
 }
-
