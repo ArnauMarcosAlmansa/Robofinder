@@ -5,6 +5,10 @@
 #include <iostream>
 #include <chrono>
 #include <utility>
+#include <thread>
+
+using namespace std::chrono_literals;
+
 
 const double WHEEL_CIRCUMFERENCE = 0.132;
 
@@ -23,18 +27,27 @@ auto main() -> int
 
     Robot robot;
     Vision vision(cam_params);
-    //I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
+    I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
 
     cv::Mat origin = robot.get_position();
 
     auto start = std::chrono::steady_clock::now();
 
-    //i2c.forward(50, 50, 24);
-    //unsigned char msg[4] = {11, 100, 100, 24};
-    //i2c.writeBytes(msg, 4);
+    i2c.forward(65, 50, 24);
+    
+    for (int i = 0; i < 5; i++)
+    {
+	i2c.forward(50, 50, 24);
+	std::this_thread::sleep_for(5s);
+	robot.move_from_last_known(robot.pulses_to_meters(24));
+	std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+	if (points.size() != 0){
+	    map.InsertPointsInTree(points);
+	}	
+    }
 
-    while (true)
+    while (false)
     {
         //auto value_left = i2c.getEncoderLeft().second;
         //auto value_right = i2c.getEncoderRight().second;
@@ -50,10 +63,12 @@ auto main() -> int
 
         if (std::chrono::steady_clock::now() - start > std::chrono::seconds(18))
             break;
+
         robot.get_position() = origin;
     }
 
-    //i2c.stop();
+    robot.commit();
+    i2c.stop();
 
     map.SaveMapToFile("vista.bt");
     return 0;

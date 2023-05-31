@@ -53,6 +53,12 @@ void Robot::move_from_last_known(float meters)
 }
 
 
+void Robot::commit()
+{
+    last_known_position = position;
+    last_known_orientation = orientation;
+}
+
 cv::Mat& Robot::get_position()
 {
     return position;
@@ -75,7 +81,7 @@ int Robot::meters_to_pulses(float meters) {
 }
 
 std::pair<bool, int> Robot::rad_to_pulses(float rad) {
-    float d = PI * WHEEL_DISTANCE * (abs(rad) / (2 * PI) );
+    float d = PI * WHEEL_DISTANCE * (std::abs(rad) / (2 * PI) );
     bool direction_of_rotation = rad < 0;
     return std::make_pair(direction_of_rotation, meters_to_pulses(d));
 }

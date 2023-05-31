@@ -8,9 +8,6 @@ map.o: map/Map.cpp map/Map.h
 libi2c.o: i2c/libi2c.cpp i2c/libi2c.h
 	$(CC) $(CXXFLAGS) -c i2c/libi2c.cpp -o libi2c.o
 
-i2c.o: i2c/I2C.cpp i2c/I2C.h i2c/i2c.h
-	$(CC) $(CXXFLAGS) -c i2c/I2C.cpp -o i2c.o
-
 robot.o: Robot.cpp Robot.h
 	$(CC) $(CXXFLAGS) -c Robot.cpp -o robot.o
 
