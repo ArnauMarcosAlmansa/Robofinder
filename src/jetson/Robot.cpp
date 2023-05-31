@@ -3,6 +3,18 @@
 
 Robot::Robot()
 {
+    last_known_position = (cv::Mat_<float>(3, 1) <<
+        0,
+        0,
+        0
+    );
+
+    last_known_orientation = (cv::Mat_<float>(3, 3) <<
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    );
+
     position = (cv::Mat_<float>(3, 1) <<
         0,
         0,
@@ -16,7 +28,7 @@ Robot::Robot()
     );
 }
 
-void Robot::turn(float radians)
+void Robot::turn_from_last_known(float radians)
 {
     cv::Mat rotation = (cv::Mat_<float>(3, 3) <<
         std::cos(radians), -std::sin(radians), 0,
@@ -24,10 +36,10 @@ void Robot::turn(float radians)
         0, 0, 1
     );
 
-    orientation = rotation * orientation;
+    orientation = last_known_orientation * orientation;
 }
 
-void Robot::move(float meters)
+void Robot::move_from_last_known(float meters)
 {
     cv::Mat dumb_translation = (cv::Mat_<float>(3, 1) <<
         meters,
@@ -37,7 +49,7 @@ void Robot::move(float meters)
 
     cv::Mat movement = orientation * dumb_translation;
 
-    position = position + movement;
+    position = last_known_position + movement;
 }
 
 
