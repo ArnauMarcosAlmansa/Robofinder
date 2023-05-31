@@ -11,7 +11,7 @@ struct CameraParams
     int fps = 15;
 
     int gain = 0;
-    int exposure = 50;
+    int exposure = 100;
     int led = 25;
 };
 

@@ -9,22 +9,30 @@
 const double WHEEL_CIRCUMFERENCE = 0.132;
 
 
-struct CameraParams camera_params;
+struct CameraParams cam_params;
 
 auto main() -> int
 {
+    cam_params.width = 752;
+    cam_params.height = 480;
+    cam_params.fps = 15;
+    cam_params.exposure = 100;
+    cam_params.gain = 0;
+    cam_params.led = 25;
+
+
     Robot robot;
-    Vision vision(camera_params);
-    I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
+    Vision vision(cam_params);
+    //I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
 
     cv::Mat origin = robot.get_position();
 
     auto start = std::chrono::steady_clock::now();
 
-    i2c.forward(50, 50, 24);
-    unsigned char msg[4] = {11, 100, 100, 24};
-    i2c.writeBytes(msg, 4);
+    //i2c.forward(50, 50, 24);
+    //unsigned char msg[4] = {11, 100, 100, 24};
+    //i2c.writeBytes(msg, 4);
 
     while (true)
     {
@@ -36,14 +44,16 @@ auto main() -> int
         //robot.move(value / 12 * WHEEL_CIRCUMFERENCE);
 
         std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+	if (points.size() != 0){
 	    map.InsertPointsInTree(points);
+	}
 
-        if (std::chrono::steady_clock::now() - start > std::chrono::seconds(5))
+        if (std::chrono::steady_clock::now() - start > std::chrono::seconds(18))
             break;
         robot.get_position() = origin;
     }
 
-    i2c.stop();
+    //i2c.stop();
 
     map.SaveMapToFile("vista.bt");
     return 0;
