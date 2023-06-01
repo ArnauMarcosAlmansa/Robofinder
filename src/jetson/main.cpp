@@ -34,14 +34,26 @@ auto main() -> int
 
     auto start = std::chrono::steady_clock::now();
 
-    i2c.forward(65, 50, 24);
-    
-    for (int i = 0; i < 5; i++)
+    //i2c.forward(65, 50, 24);
+
+    for (int i = 0; i < 1; i++)
     {
-        i2c.forward(50, 50, 24);
-        std::this_thread::sleep_for(5s);
-        robot.move_from_last_known(robot.pulses_to_meters(24));
+        i2c.forward(100, 80, 48);
+        //std::this_thread::sleep_for(5s);
+	bool finished = false;
+	while(!finished){
+		usleep(1000000);
+		finished=i2c.hasStoped();
+	}
+	usleep(100000);
+	std::pair<int,int> leftValue = i2c.getEncoderLeft();
+	usleep(100000);
+	finished=i2c.hasStoped();
+	//std::pair<int,int> rightValue = i2c.getEncoderRight();
+	std::cout <<"Value left ENCODER FINAL:" << leftValue.second <<std::endl;
+        robot.move_from_last_known(robot.pulses_to_meters(leftValue.second));
         std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+	std::cout << "Posición robot : " << robot.get_position() << std::endl;
         if (points.size() != 0){
             map.InsertPointsInTree(points);
         }
@@ -50,11 +62,11 @@ auto main() -> int
 
     while (false)
     {
-        auto value_left = i2c.getEncoderLeft();
-        auto value_right = i2c.getEncoderRight();
+        //auto value_left = i2c.getEncoderLeft();
+        //auto value_right = i2c.getEncoderRight();
 
-        std::cout << "ENCODER LEFT = (" << value_left.first << ", " << value_left.second << ")" << std::endl;
-        std::cout << "ENCODER RIGHT = (" << value_right.first << ", " << value_right.second << ")" << std::endl;
+        //std::cout << "ENCODER LEFT = (" << value_left.first << ", " << value_left.second << ")" << std::endl;
+        //std::cout << "ENCODER RIGHT = (" << value_right.first << ", " << value_right.second << ")" << std::endl;
 
         //auto value = ((double) value_left + (double) value_right) / 2.0;
 
@@ -72,7 +84,7 @@ auto main() -> int
     }
 
     robot.commit();
-    i2c.stop();
+    //i2c.stop();
 
     map.SaveMapToFile("vista.bt");
     return 0;

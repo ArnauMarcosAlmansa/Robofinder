@@ -17,6 +17,7 @@ enum class MessageType : unsigned char
     TURN_LEFT = 13,
     TURN_RIGHT = 14,
     STOP = 15,
+    TEST_STOP = 16,
     READ_ENCODER_LEFT = 20,
     READ_ENCODER_RIGHT = 21,
     RESET_ENCODER_LEFT = 22,
@@ -45,6 +46,7 @@ public:
     void turn_right(uint8_t vel_left, uint8_t vel_right, uint16_t encoder_value);
 
     void stop();
+    bool hasStoped();
 
     std::pair<int, int> getEncoderLeft();
     std::pair<int, int> getEncoderRight();

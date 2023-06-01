@@ -192,6 +192,25 @@ void I2C::getUltrasonicRight() {
     */
 }
 
+bool I2C::hasStoped(){
+	uint8_t canal = static_cast<uint8_t>(MessageType::TEST_STOP);
+	bool result = writeBytes(&canal, 1);
+	if (result != 0)
+		throw std::runtime_error("No se ha escrito TEST STOP en el canal");
+	usleep(10000);
+	uint8_t buff[3];
+	if (!readBytes(buff, 3))
+		throw std::runtime_error("No se ha leido TEST STOP");
+	int payload = ((int) buff[2]) << 8 | (int) buff[1];
+	if (payload == 110){
+		std::cout <<"Ha parado!!!!"<< std::endl;
+		return true;
+	}else{
+		std::cout <<"Valor obtenido: " << payload << std::endl;
+		return false;
+	}
+}
+
 void I2C::ledOff() {
     uint8_t send_buffer[1] = {static_cast<uint8_t>(MessageType::LED_OFF)};
     writeBytes(send_buffer, sizeof(send_buffer));
@@ -221,5 +240,3 @@ void I2C::turn_right(uint8_t vel_left, uint8_t vel_right, uint16_t encoder_value
     };
     writeBytes(send_buffer, sizeof(send_buffer));
 }
-
-
