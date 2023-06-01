@@ -41,13 +41,20 @@ auto main() -> int
     Navegacion nav;
     
 
-
     for (int i = 0; i < 1; i++)
     {
-        nav.forward();
-        nav.turn_backward();
-        nav.forward();
-        nav.turn_backward();
+        robot.move_from_last_known_with_pulses(nav.forward());
+        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+
+        robot.move_from_last_known_with_pulses(nav.turn_backward());
+        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+
+        robot.move_from_last_known_with_pulses(nav.forward());
+        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+
+        robot.move_from_last_known_with_pulses(nav.turn_backward());
+        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+
 
         //std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
 	//std::cout << "Posición robot : " << robot.get_position() << std::endl;

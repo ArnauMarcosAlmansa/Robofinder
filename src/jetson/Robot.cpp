@@ -52,6 +52,21 @@ void Robot::move_from_last_known(float meters)
     position = last_known_position + movement;
 }
 
+void Robot::move_from_last_known_with_pulses(int pulses)
+{
+    float meters = pulses_to_meters(pulses);
+
+    cv::Mat dumb_translation = (cv::Mat_<float>(3, 1) <<
+        meters,
+        0,
+        0
+    );    
+
+    cv::Mat movement = orientation * dumb_translation;
+
+    position = last_known_position + movement;
+}
+
 
 void Robot::commit()
 {

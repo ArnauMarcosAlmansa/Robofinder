@@ -9,12 +9,13 @@ class Navegacion {
 
         Navegacion();
 
-        void forward();
-        void turn_left90();
-        void turn_right90();
-
-        void turn_backward();
+        int forward();
+        int turn_left90();
+        int turn_right90();
+        
+        int turn_backward();
 
         void wait_finish();
+        int get_encoder_value();
 
 };

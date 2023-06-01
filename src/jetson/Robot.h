@@ -11,6 +11,7 @@ public:
     Robot();
     void turn_from_last_known(float radians);
     void move_from_last_known(float meters);
+    void move_from_last_known_with_pulses(int pulses);
 
     float pulses_to_meters(int pulses);
     int meters_to_pulses(float meters);
