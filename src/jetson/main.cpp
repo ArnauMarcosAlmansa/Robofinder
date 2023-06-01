@@ -6,6 +6,7 @@
 #include <chrono>
 #include <utility>
 #include <thread>
+#include "navegacion/navegacion.h"
 
 using namespace std::chrono_literals;
 
@@ -27,7 +28,7 @@ auto main() -> int
 
     Robot robot;
     Vision vision(cam_params);
-    I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
+    //I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
 
     cv::Mat origin = robot.get_position();
@@ -36,44 +37,18 @@ auto main() -> int
 
     //i2c.forward(65, 50, 24);
 
+
+    Navegacion nav;
+    
+
+
     for (int i = 0; i < 1; i++)
     {
-	while(true)
-	{
-        	i2c.forward(100, 80, 34);
-			bool finished = false;
-		while(!finished){
-			usleep(1000000);
-			finished=i2c.hasStoped();
-		}
-        //std::this_thread::sleep_for(5s);
-	//std::pair<int,int> leftValue = i2c.getEncoderLeft();
-	usleep(100000);
-	//std::pair<int,int> rightValue = i2c.getEncoderRight();
-	//std::cout <<"Value left ENCODER FINAL:" << leftValue.second <<std::endl;
-        //robot.move_from_last_known(robot.pulses_to_meters(leftValue.second));
-	//usleep(100000);
-	i2c.turn_left(100,80,30);
-	finished = false;
-	while(!finished){
-		usleep(1000000);
-		finished=i2c.hasStoped();
-	}
-	usleep(100000);
-	i2c.forward(100, 80, 34);
-	finished = false;
-	while(!finished){
-		usleep(1000000);
-		finished=i2c.hasStoped();
-	}
-	i2c.turn_left(100,80,30);
-	finished = false;
-	while(!finished){
-		usleep(1000000);
-		finished=i2c.hasStoped();
-	}
+        nav.forward();
+        nav.turn_backward();
+        nav.forward();
+        nav.turn_backward();
 
-	}
         //std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
 	//std::cout << "Posición robot : " << robot.get_position() << std::endl;
         //if (points.size() != 0){

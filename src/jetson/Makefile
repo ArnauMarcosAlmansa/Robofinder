@@ -16,8 +16,11 @@ robot.o: Robot.cpp Robot.h
 vision.o: vision/Vision.cpp vision/Vision.h vision/DUO3D.h
 	$(CC) $(CXXFLAGS) -c vision/Vision.cpp -o vision.o
 
+navegacion.o: navegacion/navegacion.cpp navegacion/navegacion.h
+	$(CC) $(CXXFLAGS) -c navegacion/navegacion.cpp -o navegacion.o
+
 main.o: main.cpp
 	$(CC) $(CXXFLAGS) -c main.cpp
 
-all: main.o vision.o robot.o libi2c.o i2c.o map.o
-	$(CC) $(CXXFLAGS) -o robofinder main.o vision.o robot.o libi2c.o i2c.o map.o
+all: main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o
+	$(CC) $(CXXFLAGS) -o robofinder main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o
