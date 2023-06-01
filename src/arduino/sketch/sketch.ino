@@ -20,8 +20,8 @@ Motor motorRight(12, 40, 41);
 Led led(6, 256);  // Configurar el objeto Led con el pin y el número de LEDs
 
 
-int encoder_left_final_position = -1;
-int encoder_right_final_position = -1;
+int encoder_left_final_position = 0;
+int encoder_right_final_position = 0;
 
 // bool send_pending = false;
 
@@ -84,24 +84,35 @@ int ultrasonic_limit = 10;              // Limite de distancia en el que los ult
 
 
 void updateEncoders() {
-  encoderLeft.update();
   encoderRight.update();
+  encoderLeft.update();
+
+
+// Comprobamos si el motor ha llegado a la posicion que queremos.
+  if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
+    motorRight.stop(); // Paramos el motor
+    /*Serial.print("Encoder Right");
+    Serial.println(encoderRight.read());
+*/
+    /*response_i2c = abs(encoder_right_final_position);
+    response_count = 0;
+    i2c_sendData();*/
+    encoder_right_final_position = 0; // Reiniciamos la variable con un valor no valido.
+    //led.off();
+    //led.ide();
+  }
+
 
   // Comprobamos si el motor ha llegado a la posicion que queremos.
   if (abs(encoderLeft.read()) >= abs(encoder_left_final_position)) {
     motorLeft.stop(); // Paramos el motor
+    //response_i2c = encoder_left_final_position;
     encoder_left_final_position = 0; // Reiniciamos la variable con un valor no valido.
     //led.off();
     //led.ide();
   }
 
-  // Comprobamos si el motor ha llegado a la posicion que queremos.
-  if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
-    motorRight.stop(); // Paramos el motor
-    encoder_right_final_position = 0; // Reiniciamos la variable con un valor no valido.
-    //led.off();
-    //led.ide();
-  }
+  
 }
 
 void updateEncoderLeft() {
@@ -137,6 +148,7 @@ void updateEncoderRight() {
   // Comprobamos si el motor ha llegado a la posicion que queremos.
   if (abs(encoderRight.read()) >= abs(encoder_right_final_position)) {
     motorRight.stop(); // Paramos el motor
+    response_i2c = encoder_right_final_position;
     encoder_right_final_position = 0; // Reiniciamos la variable con un valor no valido.
     //led.off();
     //led.ide();
@@ -169,7 +181,6 @@ void i2c_interrupcion() {
   message_count = 0;
 
   //  send_pending = true;
-
   // Serial.print("AVAILABLE END: ");
   // Serial.println(Wire.available());
   // Serial.println("i2c_interrupcion END");
@@ -210,6 +221,9 @@ void i2c_sendData() {
      Wire.write(repsonse_channel);
      response_count = 1;
   } else if (response_count == 1) {
+
+    //Serial.println(response_i2c);
+
     byte byte1 = response_i2c & 0xFF; // obtiene los 8 bits menos significativos
     Wire.write(byte1);
     response_count = 2;
@@ -227,6 +241,7 @@ void setup() {
   // Serial.begin(9600);
   // Serial.println("BEGIN");
 
+  
   attachInterrupt(digitalPinToInterrupt(2), updateEncoders, CHANGE);
   attachInterrupt(digitalPinToInterrupt(3), updateEncoders, CHANGE);
 
@@ -243,6 +258,10 @@ void setup() {
 }
 
 void loop() {
+
+  if ((encoder_left_final_position != 0) || (encoder_right_final_position != 0))
+    updateEncoders();
+  
 
   /*
  
