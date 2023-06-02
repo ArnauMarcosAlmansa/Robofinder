@@ -52,8 +52,9 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 
 
 # Agraïments
+[Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
-
+[Open Labs UAB](https://www.uab.cat/open-labs/)
 # Autores
 - [Pere Pérez López](https://github.com/Pachi23)
 
