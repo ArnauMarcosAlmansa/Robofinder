@@ -22,8 +22,8 @@ Robofinder es un proyecto de Robótica...
 - Característica 2
 - Característica 3
 
-## Requisitos de Hardware
-
+## Hardware
+-Componentes
 
 ## Requisitos de Software
 
