@@ -2,6 +2,8 @@
 
 Robofinder es un proyecto de Robótica...
 
+![Ejemplo de imagen](images/ejemplo.jpg)
+
 ## Tabla de Contenidos
 - [Introducción](#introducción)
 - [Características](#características)
