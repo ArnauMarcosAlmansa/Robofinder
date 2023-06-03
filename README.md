@@ -56,7 +56,7 @@ Descubre con RoboFinder un mundo de posibilidades en la exploración y mapeo de 
 ## Componentes
 
 ## Circuito
-
+![Circuito](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png)
 
 # Impresión 3d
 
