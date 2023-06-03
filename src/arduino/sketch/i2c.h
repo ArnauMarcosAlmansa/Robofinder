@@ -194,6 +194,19 @@ int I2C::i2cInteruptions(int channel, uint8_t message[4])
       { output = ultrasoundsensorRight.ping_blocking(); }
       break;
 
+    case 32: // Ultrasound min value:
+      { 
+        long left = ultrasoundsensorLeft.ping_blocking();
+        long right = ultrasoundsensorRight.ping_blocking();
+
+        if (left < right)
+          output = left;
+        
+        if (right <= left)
+          output = right;
+      }
+      break;
+
     case 40: // LED OFF.
       { led.off(); }
       break;

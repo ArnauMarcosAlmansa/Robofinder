@@ -24,6 +24,7 @@ enum class MessageType : unsigned char
     RESET_ENCODER_RIGHT = 23,
     ULTRASOUND_LEFT = 30,
     ULTRASOUND_RIGHT = 31,
+    MINIMUM_ULTRASOUND_VALUE = 32,
     LED_OFF = 40
 };
 
@@ -50,6 +51,7 @@ public:
 
     std::pair<int, int> getEncoderLeft();
     std::pair<int, int> getEncoderRight();
+    std::pair<int, int> getMinimumUltraSoundValue();
 
     void resetEncoderLeft();
     void resetEncoderRight();

@@ -1,10 +1,10 @@
 #include "navegacion.h"
 
 
-Navegacion::Navegacion() : i2c("/dev/i2c-1", ARDUINO_ADDRESS) { };
+Navegacion::Navegacion(I2C& i2c) : i2c(i2c) { };
 
 int Navegacion::forward(){
-    i2c.forward(100, 80, 34);
+    i2c.forward(100, 80, 12);
     wait_finish();
     return get_encoder_value();
 }
@@ -42,7 +42,7 @@ void Navegacion::decide_movement(Robot* robot,bool object,bool wall){
 		(*robot).move_from_last_known_with_pulses(this->turn_backward());
 	}else{
 		if(wall == true){
-                	std::cout <<"TODO" << std::endl;
+            (*robot).move_from_last_known_with_pulses(this->turn_backward());
 		}else{
 			(*robot).move_from_last_known_with_pulses(this->forward());
 		}
