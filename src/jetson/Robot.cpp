@@ -67,6 +67,16 @@ void Robot::move_from_last_known_with_pulses(int pulses)
     position = last_known_position + movement;
 }
 
+cv::Mat Robot::compute_camera_position()
+{
+    cv::Mat camera_translation = (cv::Mat_<float>(3, 1) <<
+        0.15,
+        0,
+        0.11
+    );
+
+    return position + orientation * camera_translation;
+}
 
 void Robot::commit()
 {

@@ -20,4 +20,16 @@ public:
     octomap::point3d calculateRay(octomap::point3d robotPosition, cv::Mat Rray, cv::Mat Rrot);
 };
 
+
+class EnvironmentPerception
+{
+private:
+    float resolution_in_radians;
+    std::vector<std::vector<std::pair<bool, octomap::point3d>>> cylinder;
+
+public:
+    void push_disc(std::vector<std::pair<bool, octomap::point3d>> disc);
+};
+
+
 #endif  // Map_H

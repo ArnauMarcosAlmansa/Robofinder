@@ -25,26 +25,26 @@ void Map::InsertPointsInTree(std::vector<cv::Point3f> points){
 	}
 };
 
-std::vector<octomap::point3d> Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot){
+std::vector<octomap::point3d> Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
+{
 	std::vector<octomap::point3d> puntos;
+    puntos.reserve(360 / 5);
 
 	float x = posit.at<float>(0);
-        float y = posit.at<float>(1);
-        float z = posit.at<float>(2);
+    float y = posit.at<float>(1);
+    float z = posit.at<float>(2);
 
-	octomap::point3d roboPos(x,y,z);
+	octomap::point3d roboPos(x, y, z);
 
-        const float pi = 3.14159265358;
-        const float step = 5.0 * pi / 180.0;  // Convertir 5 grados a radianes
+    const float pi = 3.14159265358;
+    const float step = 5.0 * pi / 180.0;  // Convertir 5 grados a radianes
 
-        for (float angle = 0.0; angle <= 2.0 * pi; angle += step) {
+    for (float angle = 0.0; angle <= 2.0 * pi; angle += step) {
 		cv::Mat matRay = (cv::Mat_<float>(3, 3) << std::cos(angle), -std::sin(angle), 0,
                                           std::sin(angle), std::cos(angle), 0,
                                           0, 0, 1);
-                octomap::point3d ret = this->calculateRay(roboPos,matRay,Rrot);
-		if ((ret.x() != 0) || (ret.y() != 0) || (ret.z()!=0)){
-			puntos.push_back(ret);
-		}
+        octomap::point3d ret = this->calculateRay(roboPos, matRay, Rrot);
+		puntos.push_back(ret);
 	}
 	return puntos;
 }
