@@ -44,7 +44,7 @@ Además de su capacidad de mapeo y navegación, RoboFinder se preocupa por la se
 </p>
 
 <p align="justify">
-RoboFinder representa un avance significativo en la exploración robótica, abriendo nuevas posibilidades en campos como la cartografía, la inspección de entornos complejos y la investigación científica. Su combinación de tecnología innovadora y capacidad de adaptación lo convierten en una herramienta versátil y confiable.
+Representa un avance significativo en la exploración robótica, abriendo nuevas posibilidades en campos como la cartografía, la inspección de entornos complejos y la investigación científica. Su combinación de tecnología innovadora y capacidad de adaptación lo convierten en una herramienta versátil y confiable.
 </p>
 
 <p align="justify">
