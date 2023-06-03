@@ -36,7 +36,7 @@ auto main() -> int
     auto start = std::chrono::steady_clock::now();
 
     //i2c.forward(65, 50, 24);
-
+    //robot.move_from_last_known(1.0);
     Navegacion nav;
     bool object = false;
     bool wall = false;
