@@ -10,7 +10,7 @@ Este robot ha sido diseñado para la exploración y el mapeo de entornos. Gracia
 </p>
 
 
-![Ejemplo de imagen](images/ejemplo.jpg)
+![Ejemplo de imagen](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Imagen_robot.jpg)
 
 # Tabla de Contenidos
 - [Introducción](#introducción)
@@ -18,11 +18,9 @@ Este robot ha sido diseñado para la exploración y el mapeo de entornos. Gracia
 - [Hardware](#hardware)
     - [Componentes](#componentes)
     - [Circuito](#circuito)
-
-- [Impresión 3d](#impresión-3d)  
-- [Requisitos de Software](#requisitos-de-software)
-- [Instalación](#instalación)
-- [Uso](#uso)
+    - [Diseño y Materiales](#diseño-y-materiales)  
+- [Evolución de la Construcción](#evolución-de-la-construcción)
+- [Software](#software)
 - [Resultado Final](#resultado-final)
 - [Demo Video](#demo-video)
 - [Agradecimientos](#agradecimientos)
@@ -56,6 +54,7 @@ Descubre con RoboFinder un mundo de posibilidades en la exploración y mapeo de 
 # Hardware
 ## Componentes
 Principales componentes utilizados:
+
                                                                                                
  Componente                                  |                            | Componente                                   |                                |
 |--------------------------------------------|----------------------------|--------------------------------------------|----------------------------|
@@ -70,24 +69,29 @@ Principales componentes utilizados:
 
 ## Circuito
 Esquema global de Robofinder:
+
+
 ![Circuito](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png)
 
-# Impresión 3d
+# Diseño y Materiales
 
 
-# Requisitos de Software
+# Evolución de la Construcción
 
 
-# Instalación
 
-# Uso
+# Software
+
+
 
 # Resultado Final
 
 
 # Demo Video
-Presiona para visualizar el video en youtube!
-[![Demo del proyecto](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/ROBOT%20DESIGN.png)](https://www.youtube.com/)
+Presiona la miniatura para visualizar el video en youtube!
+
+
+[![Demo del proyecto](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Imagen_robot.jpg)](https://www.youtube.com/)
 
 
 
@@ -99,10 +103,11 @@ Queremos destacar y agradecer especialmente a la UAB, junto a los profesores de 
 [Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
 <p align="justify">
-También al equipo del Open lab por facilitarnos la impresión 3D y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
+También al equipo del Open lab por facilitarnos la impresión 3D, el material y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
 </p>
 
 [Open Labs UAB](https://www.uab.cat/open-labs/)
+
 
 # Autores
 - [Pere Pérez López](https://github.com/Pachi23)
