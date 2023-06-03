@@ -54,8 +54,17 @@ Descubre con RoboFinder un mundo de posibilidades en la exploración y mapeo de 
 
 # Hardware
 ## Componentes
+| Componente                                 |                            | Componente                                 |                             |
+|--------------------------------------------|----------------------------|--------------------------------------------|----------------------------|
+| ![Imagen 1](ruta/imagen1.jpg)               | Pie de foto 1              | ![Imagen 2](ruta/imagen2.jpg)               | Pie de foto 2              |
+| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
+| ![Imagen 5](ruta/imagen1.jpg)               | Pie de foto 1              | ![Imagen 2](ruta/imagen2.jpg)               | Pie de foto 2              |
+| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
+| ![Imagen 1](ruta/imagen1.jpg)               | Pie de foto 1              | ![Imagen 2](ruta/imagen2.jpg)               | Pie de foto 2              |
+| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
 
 ## Circuito
+Esquema global de Robofinder:
 ![Circuito](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png)
 
 # Impresión 3d
