@@ -12,6 +12,7 @@ using namespace std::chrono_literals;
 
 
 const double WHEEL_CIRCUMFERENCE = 0.132;
+const int LIMIT_ULTRASENSOR = 18;
 
 
 struct CameraParams cam_params;
@@ -28,7 +29,7 @@ auto main() -> int
 
     Robot robot;
     Vision vision(cam_params);
-    //I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
+    I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
 
     cv::Mat origin = robot.get_position();
@@ -37,21 +38,28 @@ auto main() -> int
 
     //i2c.forward(65, 50, 24);
     //robot.move_from_last_known(1.0);
-    Navegacion nav;
+    
+    Navegacion nav(i2c);
     bool object = false;
     bool wall = false;
-    for (int i = 0; i < 1; i++)
-    {
-	//nav.decide_movement(&robot,object,wall);
+    for (int i = 0; i < 1; i++) 
+    {      
+        wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
+        //object = TODO.
+
+        if (wall && !object)
+            wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
+
+        nav.decide_movement(&robot,object,wall);
         std::cout << "Posición robot : " << robot.get_position() << std::endl;
-	for (int z =0; z < 20; z++){
-		std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
-        	if (points.size() != 0){
-            		map.InsertPointsInTree(points);
-        	}
-	}
-	object = map.DetectObjectInFront(robot.get_position());
-	std::cout <<"Object = " << object << std::endl;
+        for (int z =0; z < 20; z++){
+            std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+            if (points.size() != 0) {
+                map.InsertPointsInTree(points);
+            }
+        }
+        object = map.DetectObjectInFront(robot.get_position());
+        std::cout <<"Object = " << object << std::endl;
         robot.commit();
     }
         //auto value_left = i2c.getEncoderLeft();
