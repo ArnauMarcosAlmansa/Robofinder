@@ -1,7 +1,7 @@
 #include "Map.h"
 #include <iostream>
 
-Map::Map(float resolution) : tree(resolution) {
+Map::Map(float resolution) : resolution(resolution), tree(resolution) {
 
 };
 
@@ -25,28 +25,39 @@ void Map::InsertPointsInTree(std::vector<cv::Point3f> points){
 	}
 };
 
-std::vector<octomap::point3d> Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
+EnvironmentPerception Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
 {
-	std::vector<octomap::point3d> puntos;
-    puntos.reserve(360 / 5);
+    EnvironmentPerception perception;
+
+	std::vector<std::pair<bool, octomap::point3d>> puntos;
+    puntos.reserve(360);
+
+    const float pi = 3.14159265358;
+    const float step = pi / 180.0;  // Convertir 5 grados a radianes
 
 	float x = posit.at<float>(0);
     float y = posit.at<float>(1);
-    float z = posit.at<float>(2);
+    for (float z = posit.at<float>(2) + resolution; z < 15.0; z = z + resolution * 2)
+    {
+        octomap::point3d roboPos(x, y, z);
+        for (float angle = 0.0; angle <= 2.0 * pi; angle += step) {
+            cv::Mat matRay = (cv::Mat_<float>(3, 3) << 
+                std::cos(angle), -std::sin(angle), 0,
+                std::sin(angle), std::cos(angle), 0,
+                0, 0, 1
+            );
 
-	octomap::point3d roboPos(x, y, z);
+            octomap::point3d hitpoint = this->calculateRay(roboPos, matRay, Rrot);
+            bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
+            puntos.push_back(std::make_pair(hit, hitpoint));
+            if (hit) std::cout << "HIT" << std::endl;
+        }
 
-    const float pi = 3.14159265358;
-    const float step = 5.0 * pi / 180.0;  // Convertir 5 grados a radianes
-
-    for (float angle = 0.0; angle <= 2.0 * pi; angle += step) {
-		cv::Mat matRay = (cv::Mat_<float>(3, 3) << std::cos(angle), -std::sin(angle), 0,
-                                          std::sin(angle), std::cos(angle), 0,
-                                          0, 0, 1);
-        octomap::point3d ret = this->calculateRay(roboPos, matRay, Rrot);
-		puntos.push_back(ret);
-	}
-	return puntos;
+        perception.push_disc(puntos);
+        puntos.clear();
+    }
+	
+	return perception;
 }
 
 octomap::point3d Map::calculateRay(octomap::point3d robotPosition,cv::Mat Rray, cv::Mat Rrot){
@@ -80,4 +91,36 @@ bool Map::DetectObjectInFront(cv::Mat posit){
 		std::cout << "El rayo no alcanzó ningún punto ocupado" << std::endl;
 	}
 	return hit;
+}
+
+
+void EnvironmentPerception::push_disc(std::vector<std::pair<bool, octomap::point3d>> disc)
+{
+    if (cylinder.empty()) {
+        cylinder = disc;
+        return;
+    }
+
+    if (cylinder.size() != disc.size())
+        throw std::runtime_error("Tamaño de disco incorrecto");
+
+    for (int i = 0; i < cylinder.size(); i++)
+    {
+        if (disc[i].first)
+        {
+            if (!cylinder[i].first)
+            {
+                cylinder[i] = disc[i]; // std::cout << "FILL" << std::endl;
+            }
+            else if (disc[i].second.norm() < cylinder[i].second.norm())
+            {
+                cylinder[i] = disc[i]; // std::cout << "REPLACE" << std::endl;
+            }
+        }
+    }
+}
+
+std::vector<std::pair<bool, octomap::point3d>>& EnvironmentPerception::get_cylinder()
+{
+    return cylinder;
 }

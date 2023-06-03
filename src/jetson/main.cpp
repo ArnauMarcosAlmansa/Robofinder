@@ -23,7 +23,7 @@ auto main() -> int
     cam_params.width = 752;
     cam_params.height = 480;
     cam_params.fps = 15;
-    cam_params.exposure = 50;
+    cam_params.exposure = 100;
     cam_params.gain = 0;
     cam_params.led = 25;
 
@@ -76,14 +76,16 @@ auto main() -> int
             map.InsertPointsInTree(points);
         }
 
-        std::vector<octomap::point3d> hit_points = map.ComputeRayCasts(
+        EnvironmentPerception perception = map.ComputeRayCasts(
             robot.get_position(),
             robot.get_orientation()
         );
 
         std::cout << "HIT POINTS:" << std::endl;
-        for (octomap::point3d& p : hit_points)
-            std::cout << p << std::endl;
+        for (auto& hp : perception.get_cylinder())
+        {
+            std::cout << "(" << hp.first << "," << hp.second << ")" << std::endl;
+        }
 
         std::cout << std::endl;
 
