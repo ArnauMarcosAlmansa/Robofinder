@@ -39,6 +39,12 @@ void Robot::turn_from_last_known(float radians)
     orientation = rotation * last_known_orientation;
 }
 
+void Robot::turn_from_last_known_with_pulses(bool direction_of_turn, int pulses)
+{
+    float rads = pulses_to_rad(direction_of_turn, pulses);
+    turn_from_last_known(rads);
+}
+
 void Robot::move_from_last_known(float meters)
 {
     cv::Mat dumb_translation = (cv::Mat_<float>(3, 1) <<

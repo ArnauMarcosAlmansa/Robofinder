@@ -10,6 +10,7 @@ class Robot
 public:
     Robot();
     void turn_from_last_known(float radians);
+    void turn_from_last_known_with_pulses(bool direction_of_rotation, int pulses);
     void move_from_last_known(float meters);
     void move_from_last_known_with_pulses(int pulses);
 

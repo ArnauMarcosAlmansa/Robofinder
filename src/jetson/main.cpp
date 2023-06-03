@@ -65,14 +65,12 @@ auto main() -> int
     for (int i = 0; i < 1; i++) 
     {
         wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
-        //object = TODO.
         if (wall && !object)
             wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
 
-        std::cout << "CAMERA POSITION: " << robot.compute_camera_position() << std::endl;
-
-        std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
-        if (points.size() != 0) {
+        for (int prec = 0; prec < 2; prec++)
+        {
+            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
             map.InsertPointsInTree(points);
         }
 
@@ -81,24 +79,35 @@ auto main() -> int
             robot.get_orientation()
         );
 
-        std::cout << "HIT POINTS:" << std::endl;
-        for (auto& hp : perception.get_cylinder())
-        {
-            std::cout << "(" << hp.first << "," << hp.second << ")" << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        // nav.decide_movement(&robot,object,wall);
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
-        for (int z =0; z < 5; z++){
-            std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
-            if (points.size() != 0) {
-                map.InsertPointsInTree(points);
-            }
-        }
-
+        robot.move_from_last_known_with_pulses(nav.forward());
         robot.commit();
+    }
+
+    for (int i = 0; i < 1; i++) 
+    {
+        wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
+        if (wall && !object)
+            wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
+
+        for (int prec = 0; prec < 2; prec++)
+        {
+            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
+            map.InsertPointsInTree(points);
+        }
+
+        EnvironmentPerception perception = map.ComputeRayCasts(
+            robot.get_position(),
+            robot.get_orientation()
+        );
+
+        robot.turn_from_last_known_with_pulses(true, nav.turn_right90());
+        robot.commit();
+    }
+
+    for (int prec = 0; prec < 2; prec++)
+    {
+        std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
+        map.InsertPointsInTree(points);
     }
 
     map.SaveMapToFile("vista.bt");
