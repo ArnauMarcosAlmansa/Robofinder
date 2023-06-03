@@ -58,9 +58,9 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 # Autores
 - [Pere Pérez López](https://github.com/Pachi23)
 
-- [Lluís Alonso Pichardo](https://github.com/)
+- [Lluís Alonso Pichardo](https://github.com/lluisalosnsop)
 
 - [Arnau Marcos Almansa](https://github.com/ArnauMarcosAlmansa)
 
-- [Sergi Sanz Orellana](https://github.com/nombre-de-usuario)
+- [Sergi Sanz Orellana](https://github.com/sergisanzorellana)
 
