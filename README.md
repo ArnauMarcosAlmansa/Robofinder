@@ -59,11 +59,13 @@ Principales componentes utilizados:
  Componente                                  |                            | Componente                                   |                                |
 |--------------------------------------------|----------------------------|--------------------------------------------|----------------------------|
 | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Jetson_Nano.png)</div>               | Nvidia Jetson Nano Developer Kit               | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Camara%20duo.PNG)</div>               | DUO MLX - USB Stereo Camera            |
-| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
-| ![Imagen 5](ruta/imagen1.jpg)               | Pie de foto 1              | ![Imagen 2](ruta/imagen2.jpg)               | Pie de foto 2              |
-| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
-| ![Imagen 1](ruta/imagen1.jpg)               | Pie de foto 1              | ![Imagen 2](ruta/imagen2.jpg)               | Pie de foto 2              |
-| ![Imagen 3](ruta/imagen3.jpg)               | Pie de foto 3              | ![Imagen 4](ruta/imagen4.jpg)               | Pie de foto 4              |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>               | Arduino Mega              | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>             | Pie de foto 4              |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>              | Pie de foto 1              | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>              | Pie de foto 2              |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>| pie| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>| pie2|
+
+
+
+
 
 ## Circuito
 Esquema global de Robofinder:
