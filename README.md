@@ -17,7 +17,7 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 - [Uso](#uso)
 - [Resultado Final](#resultado-final)
 - [Demo Video](#demo-video)
-- [Agraïments](agraïments)
+- [Agradecimientos](#agradecimientos)
 - [Autores](#autores)
 
 # Introducción
@@ -51,10 +51,15 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 # Demo Video
 
 
-# Agraïments
+# Agradecimientos
+Queremos destacar y agradecer especialmente a la UAB, junto a los profesores de esta asignatura por proporcionarnos los mejores componentes posibles y por el apoyo brindado semanalmente.
+
 [Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
+También al equipo del Open lab por facilitarnos la impresión 3D y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
+
 [Open Labs UAB](https://www.uab.cat/open-labs/)
+
 # Autores
 - [Pere Pérez López](https://github.com/Pachi23)
 
