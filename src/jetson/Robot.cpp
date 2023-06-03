@@ -36,7 +36,7 @@ void Robot::turn_from_last_known(float radians)
         0, 0, 1
     );
 
-    orientation = last_known_orientation * orientation;
+    orientation = rotation * last_known_orientation;
 }
 
 void Robot::move_from_last_known(float meters)

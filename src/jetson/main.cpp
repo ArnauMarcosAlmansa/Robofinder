@@ -12,6 +12,7 @@ using namespace std::chrono_literals;
 
 
 const double WHEEL_CIRCUMFERENCE = 0.132;
+const double pi = 3.14159265359;
 
 
 struct CameraParams cam_params;
@@ -27,6 +28,24 @@ auto main() -> int
 
 
     Robot robot;
+    /*
+    std::cout << "starting position: " << robot.get_position() << std::endl;
+    std::cout << "starting orientation: " << robot.get_orientation() << std::endl;
+
+    robot.move_from_last_known(1);
+    robot.turn_from_last_known(PI);
+    robot.commit();
+
+    std::cout << "middle position: " << robot.get_position() << std::endl;
+    std::cout << "middle orientation: " << robot.get_orientation() << std::endl;
+
+    robot.move_from_last_known(1);
+    robot.turn_from_last_known(PI);
+    robot.commit();
+
+    std::cout << "end position: " << robot.get_position() << std::endl;
+    std::cout << "end orientation: " << robot.get_orientation() << std::endl;
+    */
     Vision vision(cam_params);
     //I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
@@ -36,24 +55,30 @@ auto main() -> int
     auto start = std::chrono::steady_clock::now();
 
     //i2c.forward(65, 50, 24);
-
+    // robot.move_from_last_known(0.5);
 
     Navegacion nav;
     
 
+    std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+	if (points.size() != 0){
+	    map.InsertPointsInTree(points);
+	}
+
+
     for (int i = 0; i < 1; i++)
     {
-        robot.move_from_last_known_with_pulses(nav.forward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+        // robot.move_from_last_known_with_pulses(nav.forward());
+        // std::cout << "Posición robot : " << robot.get_position() << std::endl;
 
-        robot.move_from_last_known_with_pulses(nav.turn_backward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+        // robot.move_from_last_known_with_pulses(nav.turn_backward());
+        // std::cout << "Posición robot : " << robot.get_position() << std::endl;
 
-        robot.move_from_last_known_with_pulses(nav.forward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+        // robot.move_from_last_known_with_pulses(nav.forward());
+        // std::cout << "Posición robot : " << robot.get_position() << std::endl;
 
-        robot.move_from_last_known_with_pulses(nav.turn_backward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
+        // robot.move_from_last_known_with_pulses(nav.turn_backward());
+        // std::cout << "Posición robot : " << robot.get_position() << std::endl;
 
 
         //std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());

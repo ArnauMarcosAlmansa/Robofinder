@@ -8,8 +8,39 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-//Map map(0.01);
-//octomap::OcTree tree(0.01);
+
+
+void translate_points(cv::Mat& points, cv::Mat& translation)
+{
+    for (int col = 0; col < points.cols; col++)
+    {
+        cv::Mat c = points.col(col);
+        c = c + translation;
+    }
+}
+
+void rotate_points(cv::Mat& points, cv::Mat& rotation)
+{
+    points = rotation * points;
+}
+
+void world_coordinates(cv::Mat& points, cv::Mat& position, cv::Mat& orientation)
+{
+    rotate_points(points, orientation);
+    translate_points(points, position);
+}
+
+
+
+
+
+
+
+
+
+
+
+
 Vision::Vision(struct CameraParams params)
 {
     this->params = params;
@@ -148,8 +179,22 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
         throw std:: runtime_error("No valid matches.");
         //continue;
 
-    cv::Mat rotation_left = extrinsic_rotation * orientation, translation_left = extrinsic_translation + position;
-    cv::Mat rotation_right = orientation, translation_right = position;
+    cv::Mat origin = (cv::Mat_<float>(3, 1) <<
+        0,
+        0,
+        0
+    );
+
+    cv::Mat no_rotation = (cv::Mat_<float>(3, 3) <<
+        1, 0, 0,
+        0, 1, 0,
+        0, 0, 1
+    );
+
+    cv::Mat rotation_left = extrinsic_rotation * no_rotation;
+    cv::Mat translation_left = extrinsic_translation + origin;
+    cv::Mat rotation_right = no_rotation;
+    cv::Mat translation_right = origin;
 
     projection_left = compute_projection_matrix(intrinsics_left, rotation_left, translation_left);
     projection_right = compute_projection_matrix(intrinsics_right, rotation_right, translation_right);
@@ -158,12 +203,44 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     cv::transpose(homogeneous_points, homogeneous_points);
 
-    std::vector<cv::Point3f> points3d;
+    std::cout << "homogeneous_points.size = " << homogeneous_points.size << std::endl;
+
+    cv::Mat points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
-    //map.InsertPointsInTree(points3d);
-    //}
-    //std::string filename = "octree.bt";
-    //map.SaveMapToFile("octree.bt");
+
+    points3d = points3d.reshape(1);
+
+    std::cout << "points3d = " << points3d << std::endl;
+    std::cout << "Points3d.size = " << points3d.size << std::endl;
+
+    cv::transpose(points3d, points3d);
+
+    std::cout << "transpose(Points3d).size = " << points3d.size << std::endl;
+
+    cv::Mat axis_system_change = (cv::Mat_<float>(3, 3) <<
+        0, 0, 1,
+        -1, 0, 0,
+        0, -1, 0
+    );
+
+    axis_system_change = (cv::Mat_<float>(3, 3) <<
+        0, 0, -1,
+        1, 0, 0,
+        0, 1, 0
+    );
+
+    points3d = axis_system_change * points3d;
+
+    world_coordinates(points3d, position, orientation);
+
+    cv::transpose(points3d, points3d);
+
+    points3d = points3d.reshape(3);
+
+    std::cout << "reshaped(Points3d).size = " << points3d.size << std::endl;
+
+    std::cout << "ANTES DEL RETURN" << std::endl;
+
     return points3d;
 }
 
