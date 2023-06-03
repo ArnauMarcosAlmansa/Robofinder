@@ -176,7 +176,8 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
     std::cout << "p1.size() = " << p1.size() << std::endl;
 
     if (p1.size() == 0)
-        throw std:: runtime_error("No valid matches.");
+        return std::vector<cv::Point3f>();
+        //throw std:: runtime_error("No valid matches.");
         //continue;
 
     cv::Mat origin = (cv::Mat_<float>(3, 1) <<
@@ -268,4 +269,34 @@ cv::Mat Vision::triangulate(
 Vision::~Vision()
 {
 	CloseDUOCamera();
+}
+
+
+int Vision::get_exposure(){
+    return params.exposure;
+}
+
+void Vision::set_exposure(int exposure) {
+    params.exposure = exposure;
+    SetExposure(params.exposure);
+}
+
+void Vision::auto_exposure(){
+    Robot robot;
+
+    int maxNumPoints = 0;
+    int exposureForMaxPoints = 0;
+
+    for (int i=0; i <= 250; i+=10) {
+        params.exposure = i;
+        std::vector<cv::Point3f> points = this->detect_points(robot.get_position(), robot.get_orientation());
+
+        if (maxNumPoints < points.size()){
+            maxNumPoints = points.size();
+            exposureForMaxPoints = i;
+        }
+    }
+
+    params.exposure = exposureForMaxPoints;
+    SetExposure(params.exposure);
 }

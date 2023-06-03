@@ -3,6 +3,7 @@
 #include <opencv2/cudaarithm.hpp>
 #include <opencv2/cudafeatures2d.hpp>
 #include <vector>
+#include "../Robot.h"
 
 struct CameraParams
 {
@@ -24,6 +25,11 @@ public:
     std::vector<cv::Point3f> detect_points(cv::Mat position, cv::Mat orientation);
 
     ~Vision();
+    
+    int get_exposure();
+    void set_exposure(int exposure);
+
+    void auto_exposure();
 
 private:
     struct CameraParams params;
