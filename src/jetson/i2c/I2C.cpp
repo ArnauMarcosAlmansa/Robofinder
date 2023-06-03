@@ -192,6 +192,22 @@ void I2C::getUltrasonicRight() {
     */
 }
 
+std::pair<int, int> I2C::getMinimumUltraSoundValue()
+{
+    uint8_t canal = static_cast<uint8_t>(MessageType::MINIMUM_ULTRASOUND_VALUE);
+    bool result = writeBytes(&canal, 1);
+    if (result != 0)
+        throw std::runtime_error("No se ha escrito el valor minimo de ultrasonido.");
+
+    usleep(10000);
+    uint8_t buff[3];
+    if (!readBytes(buff, 3))
+        throw std::runtime_error("No se ha leido el valor minimo.");
+
+    int payload = ((int) buff[2]) << 8 | (int) buff[1] ;
+    return std::make_pair((int) buff[0], payload);
+}
+
 bool I2C::hasStoped(){
 	uint8_t canal = static_cast<uint8_t>(MessageType::TEST_STOP);
 	bool result = writeBytes(&canal, 1);
