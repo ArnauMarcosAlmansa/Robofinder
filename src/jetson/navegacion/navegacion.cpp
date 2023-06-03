@@ -34,7 +34,8 @@ void Navegacion::wait_finish() {
 
 int Navegacion::get_encoder_value() {
     std::pair<int,int> rightValue = i2c.getEncoderRight();
-    return rightValue.second;
+    std::pair<int,int> leftValue = i2c.getEncoderLeft();
+    return (std::abs(rightValue.second) + std::abs(leftValue.second)) / 2;
 }
 
 void Navegacion::decide_movement(Robot* robot,bool object,bool wall){

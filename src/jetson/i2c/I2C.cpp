@@ -125,8 +125,8 @@ std::pair<int, int> I2C::getEncoderLeft()
     if (!readBytes(buff, 3))
         throw std::runtime_error("No se ha leido encoder left.");
 
-    int payload = ((int) buff[2]) << 8 | (int) buff[1] ;
-    return std::make_pair((int) buff[0], payload);
+    int16_t payload = ((int16_t) buff[2]) << 8 | (int16_t) buff[1];
+    return std::make_pair((int) buff[0], (int) payload);
 }
 
 std::pair<int, int> I2C::getEncoderRight()
@@ -141,8 +141,8 @@ std::pair<int, int> I2C::getEncoderRight()
     if (!readBytes(buff, 3))
         throw std::runtime_error("No se ha leido encoder right.");
 
-    int payload = ((int) buff[2]) << 8 | (int) buff[1] ;
-    return std::make_pair((int) buff[0], payload);
+    int16_t payload = ((int16_t) buff[2]) << 8 | (int16_t) buff[1] ;
+    return std::make_pair((int) buff[0], (int) payload);
 }
 
 void I2C::resetEncoderLeft() {

@@ -83,7 +83,7 @@ auto main() -> int
         robot.commit();
     }
 
-    for (int i = 0; i < 1; i++) 
+    for (int i = 0; i < 4; i++) 
     {
         wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
         if (wall && !object)
@@ -100,7 +100,9 @@ auto main() -> int
             robot.get_orientation()
         );
 
-        robot.turn_from_last_known_with_pulses(true, nav.turn_right90());
+        int pulsos = nav.turn_right90();
+        std::cout << "pulsos: " << pulsos << std::endl;
+        robot.turn_from_last_known_with_pulses(false, pulsos);
         robot.commit();
     }
 

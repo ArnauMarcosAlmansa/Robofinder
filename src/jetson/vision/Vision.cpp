@@ -112,7 +112,7 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     double min, max;
     cv::minMaxLoc(left, &min, &max);
-    std::cout << "left (min, max) = (" << min << ", " << max << ")" << std::endl;
+    // std::cout << "left (min, max) = (" << min << ", " << max << ")" << std::endl;
 
     cv::cuda::GpuMat gpu_left, gpu_right;
     gpu_left.upload(left);
@@ -204,19 +204,19 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     cv::transpose(homogeneous_points, homogeneous_points);
 
-    std::cout << "homogeneous_points.size = " << homogeneous_points.size << std::endl;
+    // std::cout << "homogeneous_points.size = " << homogeneous_points.size << std::endl;
 
     cv::Mat points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
 
     points3d = points3d.reshape(1);
 
-    std::cout << "points3d = " << points3d << std::endl;
-    std::cout << "Points3d.size = " << points3d.size << std::endl;
+    // std::cout << "points3d = " << points3d << std::endl;
+    // std::cout << "Points3d.size = " << points3d.size << std::endl;
 
     cv::transpose(points3d, points3d);
 
-    std::cout << "transpose(Points3d).size = " << points3d.size << std::endl;
+    // std::cout << "transpose(Points3d).size = " << points3d.size << std::endl;
 
     cv::Mat axis_system_change = (cv::Mat_<float>(3, 3) <<
         0, 0, 1,
@@ -237,10 +237,6 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
     cv::transpose(points3d, points3d);
 
     points3d = points3d.reshape(3);
-
-    std::cout << "reshaped(Points3d).size = " << points3d.size << std::endl;
-
-    std::cout << "ANTES DEL RETURN" << std::endl;
 
     return points3d;
 }
