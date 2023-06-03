@@ -72,9 +72,10 @@ Descubre con RoboFinder un mundo de posibilidades en la exploración y mapeo de 
 
 
 # Demo Video
+Presiona para visualizar el video en youtube!
 [![Demo del proyecto](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/ROBOT%20DESIGN.png)](https://www.youtube.com/)
 
-![Demo Video](https://www.youtube.com/)
+
 
 # Agradecimientos
 <p align="justify">
