@@ -1,6 +1,6 @@
-# Robofinder
+<h1 style="font-size: 48px;">ROBOFINDER</h1>
 
-## Introducción
+# Introducción
 <p align="justify">
 Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería Informática de la Universidad Autónoma de Barcelona.
 </p>
