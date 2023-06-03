@@ -1,5 +1,5 @@
 #include <opencv2/core/core.hpp>
-
+#pragma once
 #define WHEEL_PERIMETER 0.132       // Permimetro de la rueda.
 #define PULSES_FOR_REVOLUTION 12    // Pulsos del encoder
 #define WHEEL_DISTANCE 0.22         // Ancho entre ruedas.

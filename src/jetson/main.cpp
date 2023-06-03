@@ -37,38 +37,26 @@ auto main() -> int
 
     //i2c.forward(65, 50, 24);
 
-
     Navegacion nav;
-    
-
+    bool object = false;
+    bool wall = false;
     for (int i = 0; i < 1; i++)
     {
-        robot.move_from_last_known_with_pulses(nav.forward());
+	//nav.decide_movement(&robot,object,wall);
         std::cout << "Posición robot : " << robot.get_position() << std::endl;
-
-        robot.move_from_last_known_with_pulses(nav.turn_backward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
-
-        robot.move_from_last_known_with_pulses(nav.forward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
-
-        robot.move_from_last_known_with_pulses(nav.turn_backward());
-        std::cout << "Posición robot : " << robot.get_position() << std::endl;
-
-
-        //std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
-	//std::cout << "Posición robot : " << robot.get_position() << std::endl;
-        //if (points.size() != 0){
-        //    map.InsertPointsInTree(points);
-        //}
-        //robot.commit();
+	for (int z =0; z < 20; z++){
+		std::vector<cv::Point3f> points = vision.detect_points(robot.get_position(), robot.get_orientation());
+        	if (points.size() != 0){
+            		map.InsertPointsInTree(points);
+        	}
+	}
+	object = map.DetectObjectInFront(robot.get_position());
+	std::cout <<"Object = " << object << std::endl;
+        robot.commit();
     }
-
-    while (false)
-    {
         //auto value_left = i2c.getEncoderLeft();
         //auto value_right = i2c.getEncoderRight();
-
+    /*
         //std::cout << "ENCODER LEFT = (" << value_left.first << ", " << value_left.second << ")" << std::endl;
         //std::cout << "ENCODER RIGHT = (" << value_right.first << ", " << value_right.second << ")" << std::endl;
 
@@ -89,7 +77,7 @@ auto main() -> int
 
     robot.commit();
     //i2c.stop();
-
+   */
     map.SaveMapToFile("vista.bt");
     return 0;
 }
