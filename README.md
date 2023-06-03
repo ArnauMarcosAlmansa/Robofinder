@@ -2,6 +2,7 @@
 
 Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería Informática de la Universidad Autónoma de Barcelona.
 
+
 ![Ejemplo de imagen](images/ejemplo.jpg)
 
 # Tabla de Contenidos
@@ -21,7 +22,29 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 - [Autores](#autores)
 
 # Introducción
+<p align="justify">
+Este robot ha sido diseñado para la exploración y el mapeo de entornos. Gracias al algorismo de Simultaneous Localization and Mapping (SLAM), RoboFinder tiene la capacidad de generar mapas tridimensionales detallados mientras se mueve con autonomía. 
+</p>
 
+<p align="justify">
+Su sistema se basa en una cámara estéreo y encoders, permitiéndole obtener una comprensión precisa de su ubicación en todo momento.
+</p>
+
+<p align="justify">
+RoboFinder cuenta con un potente sistema de control. Una Jetson Nano se encarga del procesamiento, mientras que la comunicación I2C asegura una transmisión de información fluida y confiable entre los componentes. Este enfoque de control inteligente garantiza movimientos precisos y coordinados en cada acción que realiza.
+</p>
+
+<p align="justify">
+Además de su capacidad de mapeo y navegación, RoboFinder se preocupa por la seguridad. Sus sensores de ultrasonido le permiten detectar obstáculos cercanos y detenerse de manera segura para evitar colisiones. Para brindar una experiencia visualmente atractiva, hemos incorporado LEDs que indican el movimiento del robot, añadiendo un toque estético a su funcionalidad.
+</p>
+
+<p align="justify">
+RoboFinder representa un avance significativo en la exploración robótica, abriendo nuevas posibilidades en campos como la cartografía, la inspección de entornos complejos y la investigación científica. Su combinación de tecnología innovadora y capacidad de adaptación lo convierten en una herramienta versátil y confiable.
+</p>
+
+<p align="justify">
+Descubre con RoboFinder un mundo de posibilidades en la exploración y mapeo de entornos. Siéntete parte de la revolución robótica y únete a nosotros en la búsqueda de soluciones avanzadas para desafíos del mundo real
+</p>
 
 # Características
 
@@ -49,14 +72,20 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 
 
 # Demo Video
+[![Demo del proyecto]()](https://www.youtube.com/)
 
+![Demo Video](https://www.youtube.com/)
 
 # Agradecimientos
+<p align="justify">
 Queremos destacar y agradecer especialmente a la UAB, junto a los profesores de esta asignatura por proporcionarnos los mejores componentes posibles y por el apoyo brindado semanalmente.
+</p>
 
 [Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
+<p align="justify">
 También al equipo del Open lab por facilitarnos la impresión 3D y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
+</p>
 
 [Open Labs UAB](https://www.uab.cat/open-labs/)
 
