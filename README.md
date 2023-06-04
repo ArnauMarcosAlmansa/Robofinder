@@ -9,8 +9,9 @@ Robofinder es un proyecto de la asignatura de Robótica del Grado en Ingeniería
 Este robot ha sido diseñado para la exploración y el mapeo de entornos. Gracias al algorismo de Simultaneous Localization and Mapping (SLAM), RoboFinder tiene la capacidad de generar mapas tridimensionales detallados mientras se mueve con autonomía. 
 </p>
 
-<img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Imagen_robot.jpg" alt="Foto" width="80%">
-
+<div align="center">
+    <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Imagen_robot.jpg" alt="Foto" width="80%">
+</div>
 
 # Tabla de Contenidos
 - [Introducción](#introducción)
