@@ -90,6 +90,45 @@ Diagrama Software:
 
 ![Diagrama Software](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Diagrama%20Software.png)
 
+## Módulos para el Arduino:
+
+<div align="justify">
+
+- **Módulo de control de motores:** Encargado de comandar a los motores: cómo tienen que moverse, velocidad, sentido; y qué motor debe moverse para poder moverse en línea recta o hacer curvas sobre su propio eje o abiertas; también poder frenar por si detecta algún imprevisto.
+
+- **Módulo de sensores encoder:** Para poder leer datos de los encoders, cuantas vueltas dan las ruedas, o cuando completan una vuelta, etc.
+
+- **Módulo de sensores de ultrasonido:** Para poder obtener los valores de los sensores de ultrasonido y poder alertar sobre objetos en la trayectoria.
+
+- **Módulo de comunicación I2C:** Para poder comunicarse con la Jetson Nano. Tanto para recibir como enviar información, respecto a cuando hay que empezar a moverse (sentido, velocidad, posición final) o si hay que pararse. Permite comunicar los sensores de ultrasonido y los encoders con la Jetson para que así esta pueda tener los valores de estos sensores.
+
+- **Módulo de control (interpretar órdenes que da la Jetson, capacidad de responder a imprevistos):** Entender las órdenes que recibimos de la Jeston Nano y poder gestionar las interrupciones que nos pueden dar los sensores de ultrasonido si un objeto inesperado se nos cruza en nuestra trayectoria.
+
+- **Módulo de leds:** Permite definir distintos patrones en la matriz led que tiene el robot. Esta nos notifica cuando el robot se mueve, hacia qué dirección lo hace o si está parado.
+
+</div>
+
+
+
+## Módulos para la Jetson:
+
+<div align="justify">
+
+- **Módulo de captura de imagen:** Encargado de captar las imágenes en el formato, medida e intervalo que designemos.
+
+- **Módulo de detección de puntos con imágenes:** Con los conjuntos de imágenes capturados, tenemos que usar un algoritmo SIFT, SURF o ORB para detectar puntos relevantes en las imágenes y ponerlos en correspondencia. Una vez tengamos los pares de puntos, deberíamos poder estimar donde están estos puntos en el espacio.
+
+- **Módulo de reconocimiento de objetos:** Poder reconocer los objetos del entorno, como los carteles de las puertas de las aulas, escaleras, etc.
+
+- **Módulo de reconocimiento de texto:** Poder leer y comprender el texto que tenemos en las imágenes para poder buscar una aula en concreto.
+
+- **Módulo de comunicación I2C:** Para poder comunicar al Arduino cuando ha de empezar a mover los motores, qué motores y a qué velocidad. También recibir datos de los sensores de ultrasonido que envíe el Arduino.
+
+- **Módulo de navegación:** Se encarga de decidir hacia dónde tiene que moverse el robot según a dónde hay que ir y la información que tenemos del entorno en el mapa. Tiene que poder generar rutas para ir de un punto de origen a un punto de destino.
+
+- **Módulo de mapa:** Generar un mapa 3D del espacio donde se mueve el robot para poder navegar y consultar qué tiene el robot a su alrededor y no colisionar con los objetos. Esto lo haremos utilizando alguna librería como OctoMap (https://github.com/OctoMap/octomap).
+
+</div>
 
 
 
