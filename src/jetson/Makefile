@@ -7,6 +7,7 @@ map.o: map/Map.cpp map/Map.h
 
 libi2c.o: i2c/libi2c.cpp i2c/libi2c.h
 	$(CC) $(CXXFLAGS) -c i2c/libi2c.cpp -o libi2c.o
+
 i2c.o: i2c/I2C.cpp i2c/I2C.h
 	$(CC) $(CXXFLAGS) -c i2c/I2C.cpp -o i2c.o
 
@@ -19,8 +20,15 @@ vision.o: vision/Vision.cpp vision/Vision.h vision/DUO3D.h
 navegacion.o: navegacion/navegacion.cpp navegacion/navegacion.h
 	$(CC) $(CXXFLAGS) -c navegacion/navegacion.cpp -o navegacion.o
 
+localization.o: localization/Localization.cpp localization/Localization.h map/Map.h Robot.h
+	$(CC) $(CXXFLAGS) -c localization/Localization.cpp -o localization.o
+
 main.o: main.cpp
 	$(CC) $(CXXFLAGS) -c main.cpp
 
-all: main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o
-	$(CC) $(CXXFLAGS) -o robofinder main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o
+all: main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o localization.o
+	$(CC) $(CXXFLAGS) -o robofinder main.o vision.o robot.o libi2c.o i2c.o map.o navegacion.o localization.o
+
+
+clean:
+	rm *.o

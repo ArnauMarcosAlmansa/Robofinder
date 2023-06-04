@@ -14,7 +14,8 @@ public:
     void move_from_last_known(float meters);
     void move_from_last_known_with_pulses(int pulses);
 
-    cv::Mat compute_camera_position();
+    cv::Mat compute_camera_position(cv::Mat& position, cv::Mat& orientation);
+    cv::Mat compute_own_camera_position();
 
     float pulses_to_meters(int pulses);
     int meters_to_pulses(float meters);

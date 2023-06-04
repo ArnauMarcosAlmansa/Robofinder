@@ -1,6 +1,8 @@
 #include "Map.h"
 #include <iostream>
 
+#define PI 3.14159265358
+
 Map::Map(float resolution) : resolution(resolution), tree(resolution) {
 
 };
@@ -91,6 +93,52 @@ bool Map::DetectObjectInFront(cv::Mat posit){
 		std::cout << "El rayo no alcanzó ningún punto ocupado" << std::endl;
 	}
 	return hit;
+}
+
+
+std::vector<cv::Point3f> Map::detect_points_with_virtual_camera(cv::Mat& camera_position, cv::Mat& camera_orientation)
+{
+    std::vector<cv::Point3f> points;
+    float h_rads = 165.0 * PI / 180.0;
+    float min_h_rads = -(h_rads / 2);
+    float max_h_rads = (h_rads / 2);
+    float h_step = h_rads / 165.0;
+
+    float v_rads = 165.0 * PI / 180.0;
+    float min_v_rads = -(v_rads / 2);
+    float max_v_rads = (v_rads / 2);
+    float v_step = v_rads / 165.0;
+
+	float x = camera_position.at<float>(0);
+    float y = camera_position.at<float>(1);
+    float z = camera_position.at<float>(2);
+    octomap::point3d cam_pos(x, y, z);
+
+    for (float h_rads = min_h_rads; h_rads < max_h_rads; h_rads += h_step)
+    {
+        for (float v_rads = min_v_rads; v_rads < max_v_rads; v_rads += v_step)
+        {
+            cv::Mat z_rotation = (cv::Mat_<float>(3, 3) << 
+                std::cos(h_rads), -std::sin(h_rads), 0,
+                std::sin(h_rads), std::cos(h_rads), 0,
+                0, 0, 1
+            );
+
+            cv::Mat y_rotation = (cv::Mat_<float>(3, 3) << 
+                std::cos(h_rads), 0, std::sin(h_rads),
+                0, 1, 0,
+                -std::sin(h_rads), 0, std::cos(h_rads)
+            );
+
+            
+            octomap::point3d hitpoint = calculateRay(cam_pos, z_rotation * y_rotation, camera_orientation);
+            bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
+            if (hit)
+                points.push_back(cv::Point3f(hitpoint.x(), hitpoint.y(), hitpoint.z()));
+        }
+    }
+
+    return points;
 }
 
 

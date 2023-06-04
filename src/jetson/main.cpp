@@ -7,6 +7,7 @@
 #include <utility>
 #include <thread>
 #include "navegacion/navegacion.h"
+#include "localization/Localization.h"
 
 using namespace std::chrono_literals;
 
@@ -50,6 +51,7 @@ auto main() -> int
     Vision vision(cam_params);
     I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
     Map map(0.01);
+    MonteCarloLocalization localization(20);
 
     cv::Mat origin = robot.get_position();
 
@@ -70,7 +72,7 @@ auto main() -> int
 
         for (int prec = 0; prec < 2; prec++)
         {
-            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
+            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
             map.InsertPointsInTree(points);
         }
 
@@ -80,6 +82,8 @@ auto main() -> int
         );
 
         robot.move_from_last_known_with_pulses(nav.forward());
+        std::vector<cv::Point3f> cam_points;
+        localization.localize(robot, cam_points, map);
         robot.commit();
     }
 
@@ -91,7 +95,7 @@ auto main() -> int
 
         for (int prec = 0; prec < 2; prec++)
         {
-            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
+            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
             map.InsertPointsInTree(points);
         }
 
@@ -108,7 +112,7 @@ auto main() -> int
 
     for (int prec = 0; prec < 2; prec++)
     {
-        std::vector<cv::Point3f> points = vision.detect_points(robot.compute_camera_position(), robot.get_orientation());
+        std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
         map.InsertPointsInTree(points);
     }
 

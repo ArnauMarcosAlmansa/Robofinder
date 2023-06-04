@@ -23,6 +23,8 @@ public:
     bool DetectObjectInFront(cv::Mat robotPosition);
     EnvironmentPerception ComputeRayCasts(cv::Mat posit, cv::Mat Rrot);
     octomap::point3d calculateRay(octomap::point3d robotPosition, cv::Mat Rray, cv::Mat Rrot);
+
+    std::vector<cv::Point3f> detect_points_with_virtual_camera(cv::Mat& camera_position, cv::Mat& camera_orientation);
 };
 
 

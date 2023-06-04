@@ -14,12 +14,14 @@ int numParticles = 100; // Número de partículas
 std::vector<Particle> particles(numParticles); // Vector para almacenar las partículas
 
 // Genera un valor aleatorio dentro de un rango específico
-double getRandomValue(double min, double max) {
+double getRandomValue(double min, double max)
+{
     return min + ((double)rand() / RAND_MAX) * (max - min);
 }
 
 // Genera una partícula con valores aleatorios para x, y y theta
-Particle generateRandomParticle(double minX, double maxX, double minY, double maxY) {
+Particle generateRandomParticle(double minX, double maxX, double minY, double maxY)
+{
     Particle particle;
     particle.pose.x = getRandomValue(minX, maxX);
     particle.pose.y = getRandomValue(minY, maxY);
@@ -28,19 +30,24 @@ Particle generateRandomParticle(double minX, double maxX, double minY, double ma
 }
 
 // Genera el conjunto inicial de partículas aleatorias
-void generateInitialParticles(double minX, double maxX, double minY, double maxY) {
-    for (int i = 0; i < numParticles; i++) {
+void generateInitialParticles(double minX, double maxX, double minY, double maxY)
+{
+    for (int i = 0; i < numParticles; i++)
+    {
         particles[i] = generateRandomParticle(minX, maxX, minY, maxY);
     }
 }
 
-void printParticles(const std::vector<Particle>& particles) {
-    for (const auto& particle : particles) {
+void printParticles(const std::vector<Particle>& particles)
+{
+    for (const auto& particle : particles)
+    {
         std::cout << "Particle: x = " << particle.pose.x << ", y = " << particle.pose.y << ", theta = " << particle.pose.z << ", weight = " << particle.weight << std::endl;
     }
 }
 
-void updateParticleWeights(std::vector<Particle>& particles, const std::vector<cv::Point3f>& cameraPoints) {
+void updateParticleWeights(std::vector<Particle>& particles, const std::vector<cv::Point3f>& cameraPoints)
+{
     // Preparar los datos para el modelo KNN
     cv::Mat trainingData(cameraPoints.size(), 3, CV_32F);
     cv::Mat labels(cameraPoints.size(), 1, CV_32S);
