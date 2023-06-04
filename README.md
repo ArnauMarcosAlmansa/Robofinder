@@ -72,7 +72,7 @@ Principales componentes utilizados:
 Esquema global de Robofinder:
 
 <div align="center">
-<img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png" alt="Circuito" width="80%">
+    <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png" alt="Circuito" width="80%">
 </div>
 
 
@@ -80,7 +80,7 @@ Esquema global de Robofinder:
 Diseño final de la estructura:
 
 <div align="center">
-![Robofinder_final_stl](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG)
+     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG" alt="Robofinder_final_stl" width="80%">
 </div>
 
 # Evolución de la Construcción
@@ -91,13 +91,13 @@ Diseño final de la estructura:
 ## Diagrama Software:
 
 <div align="center">
-<img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Diagrama%20Software.png" alt="Diagrama Software" width="80%">
+    <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Diagrama%20Software.png" alt="Diagrama Software" width="80%">
 </div>
 
 ## Módulos para el Arduino:
 
 <div align="justify">
-
+    
 - **Módulo de control de motores:** Encargado de comandar a los motores: cómo tienen que moverse, velocidad, sentido; y qué motor debe moverse para poder moverse en línea recta o hacer curvas sobre su propio eje o abiertas; también poder frenar por si detecta algún imprevisto.
 
 - **Módulo de sensores encoder:** Para poder leer datos de los encoders, cuantas vueltas dan las ruedas, o cuando completan una vuelta, etc.
@@ -109,21 +109,22 @@ Diseño final de la estructura:
 - **Módulo de control (interpretar órdenes que da la Jetson, capacidad de responder a imprevistos):** Entender las órdenes que recibimos de la Jeston Nano y poder gestionar las interrupciones que nos pueden dar los sensores de ultrasonido si un objeto inesperado se nos cruza en nuestra trayectoria.
 
 - **Módulo de leds:** Permite definir distintos patrones en la matriz led que tiene el robot. Esta nos notifica cuando el robot se mueve, hacia qué dirección lo hace o si está parado.
-
+    
 </div>
 
 
 ## Diagrama de la Jetson:
 
 <div align="center">
-![sfw_jetson](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/diagrama_sfw_jetson.PNG)
+     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/diagrama_sfw_jetson.PNG" alt="sfw_jetson" 
 </div>
 
-
+    
+    
 ## Módulos para la Jetson:
 
 <div align="justify">
-
+    
 - **Módulo de captura de imagen:** Encargado de captar las imágenes en el formato, medida e intervalo que designemos.
 
 - **Módulo de detección de puntos con imágenes:** Con los conjuntos de imágenes capturados, tenemos que usar un algoritmo SIFT, SURF o ORB para detectar puntos relevantes en las imágenes y ponerlos en correspondencia. Una vez tengamos los pares de puntos, deberíamos poder estimar donde están estos puntos en el espacio.
@@ -142,6 +143,7 @@ Diseño final de la estructura:
 
 
 
+    
 # Resultado Final
 
 
@@ -154,15 +156,14 @@ Presiona la miniatura para visualizar el video en youtube!
 
 
 # Agradecimientos
-<p align="justify">
+
 Queremos destacar y agradecer especialmente a la UAB, junto a los profesores de esta asignatura por proporcionarnos los mejores componentes posibles y por el apoyo brindado semanalmente.
-</p>
+
 
 [Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
-<p align="justify">
+
 También al equipo del Open lab por facilitarnos la impresión 3D, el material y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
-</p>
 
 [Open Labs UAB](https://www.uab.cat/open-labs/)
 
