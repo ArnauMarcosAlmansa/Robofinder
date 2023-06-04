@@ -71,16 +71,17 @@ Principales componentes utilizados:
 ## Circuito
 Esquema global de Robofinder:
 
+<div align="center">
 <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png" alt="Circuito" width="80%">
-
+</div>
 
 
 # Diseño y Materiales
 Diseño final de la estructura:
 
-
+<div align="center">
 ![Robofinder_final_stl](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG)
-
+</div>
 
 # Evolución de la Construcción
 
@@ -89,8 +90,9 @@ Diseño final de la estructura:
 # Software
 ## Diagrama Software:
 
+<div align="center">
 <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Diagrama%20Software.png" alt="Diagrama Software" width="80%">
-
+</div>
 
 ## Módulos para el Arduino:
 
@@ -113,8 +115,9 @@ Diseño final de la estructura:
 
 ## Diagrama de la Jetson:
 
+<div align="center">
 ![sfw_jetson](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/diagrama_sfw_jetson.PNG)
-
+</div>
 
 
 ## Módulos para la Jetson:
