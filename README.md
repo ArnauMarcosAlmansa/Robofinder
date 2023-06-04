@@ -74,7 +74,10 @@ Esquema global de Robofinder:
 ![Circuito](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png)
 
 # Diseño y Materiales
-![Nombre Descriptivo](ruta/al/archivo.stl)
+Diseño final de la estructura:
+
+
+![Robofinder_final_stl](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG)
 
 
 # Evolución de la Construcción
