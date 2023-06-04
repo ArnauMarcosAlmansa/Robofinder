@@ -115,9 +115,9 @@ Diseño final de la estructura:
 
 ## Diagrama de la Jetson:
 
-<div align="center">
+<p align="center">
      <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/diagrama_sfw_jetson.PNG" alt="sfw_jetson" 
-</div>
+</p>
 
     
     
