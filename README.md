@@ -162,14 +162,15 @@ Presiona la miniatura para visualizar el video en youtube!
 
 
 # Agradecimientos
-
+<p align="justify">
 Queremos destacar y agradecer especialmente a la UAB, junto a los profesores de esta asignatura por proporcionarnos los mejores componentes posibles y por el apoyo brindado semanalmente.
-
+</p>
 
 [Universitat Autònoma de Barcelona (UAB)](https://www.uab.cat/web/universitat-autonoma-de-barcelona-1345467954409.html)
 
-
+<p align="justify">
 También al equipo del Open lab por facilitarnos la impresión 3D, el material y todas las herramientas que nos han permitido llevar a cabo nuestro robot.
+</p>
 
 [Open Labs UAB](https://www.uab.cat/open-labs/)
 
