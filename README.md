@@ -85,6 +85,11 @@ Diseño final de la estructura:
 
 
 # Software
+Diagrama Software:
+
+
+![Diagrama Software](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Diagrama%20Software.png)
+
 
 
 
