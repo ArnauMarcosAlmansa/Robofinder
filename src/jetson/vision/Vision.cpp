@@ -97,7 +97,7 @@ Vision::Vision(struct CameraParams params)
 }
 
 
-std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orientation)
+cv::Mat Vision::detect_points()
 {
     //for (int iter = 0; iter < 100; iter++)
     //{
@@ -176,7 +176,7 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
     std::cout << "p1.size() = " << p1.size() << std::endl;
 
     if (p1.size() == 0)
-        return std::vector<cv::Point3f>();
+        return cv::Mat(0, 3, CV_32F);
         //throw std:: runtime_error("No valid matches.");
         //continue;
 
@@ -208,13 +208,35 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
 
     cv::Mat points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
+    return points3d;
+}
 
-    points3d = points3d.reshape(1);
+std::vector<cv::Point3f> Vision::filter_out_faraway_points(std::vector<cv::Point3f> points)
+{
+    std::vector<cv::Point3f> good_points;
+    std::copy_if(points.begin(), points.end(), std::back_inserter(good_points), [](cv::Point3f p) {
+        return std::sqrt(p.x * p.x + p.y * p.y + p.z * p.z) < 1.0;
+    });
+    
+    return good_points;
+}
+
+std::vector<cv::Point3f> Vision::camera_points_to_world(std::vector<cv::Point3f> cam_points, cv::Mat position, cv::Mat orientation)
+{
+    cv::Mat camera_points(cam_points.size(), 3, CV_32F);
+
+    for (size_t i = 0; i < cam_points.size(); i++) {
+        camera_points.at<float>(i, 0) = cam_points[i].x;
+        camera_points.at<float>(i, 1) = cam_points[i].y;
+        camera_points.at<float>(i, 2) = cam_points[i].z;
+    }
+
+    camera_points = camera_points.reshape(1);
 
     // std::cout << "points3d = " << points3d << std::endl;
     // std::cout << "Points3d.size = " << points3d.size << std::endl;
 
-    cv::transpose(points3d, points3d);
+    cv::transpose(camera_points, camera_points);
 
     // std::cout << "transpose(Points3d).size = " << points3d.size << std::endl;
 
@@ -230,15 +252,15 @@ std::vector<cv::Point3f> Vision::detect_points(cv::Mat position, cv::Mat orienta
         0, 1, 0
     );
 
-    points3d = axis_system_change * points3d;
+    camera_points = axis_system_change * camera_points;
 
-    world_coordinates(points3d, position, orientation);
+    world_coordinates(camera_points, position, orientation);
 
-    cv::transpose(points3d, points3d);
+    cv::transpose(camera_points, camera_points);
 
-    points3d = points3d.reshape(3);
+    camera_points = camera_points.reshape(3);
 
-    return points3d;
+    return camera_points;
 }
 
 
@@ -285,7 +307,7 @@ void Vision::auto_exposure(){
 
     for (int i=0; i <= 250; i+=10) {
         params.exposure = i;
-        std::vector<cv::Point3f> points = this->detect_points(robot.get_position(), robot.get_orientation());
+        std::vector<cv::Point3f> points = this->detect_points();
 
         if (maxNumPoints < points.size()){
             maxNumPoints = points.size();

@@ -104,10 +104,10 @@ std::vector<cv::Point3f> Map::detect_points_with_virtual_camera(cv::Mat& camera_
     float max_h_rads = (h_rads / 2);
     float h_step = h_rads / 165.0;
 
-    float v_rads = 165.0 * PI / 180.0;
+    float v_rads = 105.0 * PI / 180.0;
     float min_v_rads = -(v_rads / 2);
     float max_v_rads = (v_rads / 2);
-    float v_step = v_rads / 165.0;
+    float v_step = v_rads / 105.0;
 
 	float x = camera_position.at<float>(0);
     float y = camera_position.at<float>(1);
@@ -133,6 +133,7 @@ std::vector<cv::Point3f> Map::detect_points_with_virtual_camera(cv::Mat& camera_
             
             octomap::point3d hitpoint = calculateRay(cam_pos, z_rotation * y_rotation, camera_orientation);
             bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
+            // TODO: poner los puntos respecto a la camara
             if (hit)
                 points.push_back(cv::Point3f(hitpoint.x(), hitpoint.y(), hitpoint.z()));
         }

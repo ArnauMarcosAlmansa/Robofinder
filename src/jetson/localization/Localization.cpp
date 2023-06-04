@@ -1,5 +1,6 @@
 #include "Localization.h"
 #include <opencv2/ml.hpp>
+#include <iostream>
 
 
 cv::Mat Particle::position()
@@ -70,6 +71,10 @@ void MonteCarloLocalization::write_particles(std::ostream& out)
 
 void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point3f>& camera_points, Map& mapa)
 {
+    if (camera_points.size() == 0)
+        throw std::runtime_error("Se ha intentado actualizar los pesos con camera_points.size() = 0.");
+    std::cout << "camera_points.size() = " << camera_points.size() << std::endl;
+
     cv::Mat training_data(camera_points.size(), 3, CV_32F);
     cv::Mat labels(camera_points.size(), 1, CV_32S);
 
@@ -83,12 +88,14 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
         labels.at<int>(i, 0) = (camera_points[i].z > 0.0) ? 1 : 0;
     }
 
+    std::cout << "AAA" << std::endl;
     // Entrenar el modelo KNN
     int k = 1; // Número de vecinos más cercanos
     cv::Ptr<cv::ml::KNearest> knn = cv::ml::KNearest::create();
     knn->train(training_data, cv::ml::ROW_SAMPLE, labels);
 
 
+    std::cout << "BBB" << std::endl;
 
     // TODO: aqui es donde hay que hacer raycast desde cada particula
     // Iterar sobre las partículas y ajustar sus pesos utilizando KNN
@@ -97,7 +104,23 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
         cv::Mat particle_cam_ori = particle.orientation();
         std::vector<cv::Point3f> points = mapa.detect_points_with_virtual_camera(particle_cam_pos, particle_cam_ori);
         
+        if (points.size() == 0)
+        {
+            particle.weight = 0;
+            continue;
+        }
+
+        std::cout << "CCC" << std::endl;
+        // TODO: revisar 
         cv::Mat sample_data(points.size(), 3, CV_32F);
+
+        for (size_t i = 0; i < points.size(); i++) {
+            sample_data.at<float>(i, 0) = points[i].x;
+            sample_data.at<float>(i, 1) = points[i].y;
+            sample_data.at<float>(i, 2) = points[i].z;
+        }
+
+        std::cout << "DDD" << std::endl;
 
         // Encontrar los vecinos más cercanos utilizando KNN
         cv::Mat neighbor_indices, neighbor_distances;
@@ -107,6 +130,8 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
         neighbor_distances = 1 / neighbor_distances;
         
         particle.weight = cv::sum(neighbor_distances)[0] / points.size();
+
+        std::cout << "EEE" << std::endl;
     }
 }
 

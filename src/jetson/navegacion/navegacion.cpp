@@ -21,6 +21,12 @@ int Navegacion::turn_right90() {
     return get_encoder_value();
 }
 
+int Navegacion::turn_right135() {
+	i2c.turn_right(100, 80, 23);
+    wait_finish();
+    return get_encoder_value();
+}
+
 int Navegacion::turn_backward() {
     i2c.turn_left(100,80,31);
 	wait_finish();

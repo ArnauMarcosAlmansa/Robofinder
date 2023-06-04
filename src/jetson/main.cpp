@@ -30,74 +30,51 @@ auto main() -> int
 
 
     Robot robot;
-    /*
-    std::cout << "starting position: " << robot.get_position() << std::endl;
-    std::cout << "starting orientation: " << robot.get_orientation() << std::endl;
-
-    robot.move_from_last_known(1);
-    robot.turn_from_last_known(PI);
-    robot.commit();
-
-    std::cout << "middle position: " << robot.get_position() << std::endl;
-    std::cout << "middle orientation: " << robot.get_orientation() << std::endl;
-
-    robot.move_from_last_known(1);
-    robot.turn_from_last_known(PI);
-    robot.commit();
-
-    std::cout << "end position: " << robot.get_position() << std::endl;
-    std::cout << "end orientation: " << robot.get_orientation() << std::endl;
-    */
     Vision vision(cam_params);
     I2C i2c("/dev/i2c-1", ARDUINO_ADDRESS);
+    Navegacion nav(i2c);
     Map map(0.01);
     MonteCarloLocalization localization(20);
 
-    cv::Mat origin = robot.get_position();
 
-    auto start = std::chrono::steady_clock::now();
+    auto start_time = std::chrono::steady_clock::now();
+    auto current_time = std::chrono::steady_clock::now();
 
-    //i2c.forward(65, 50, 24);
-    // robot.move_from_last_known(0.5);
-    
-    Navegacion nav(i2c);
     bool object = false;
     bool wall = false;
 
-    for (int i = 0; i < 1; i++) 
+    for (int i = 0; i < 4; i++)
     {
-        wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
-        if (wall && !object)
-            wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
-
         for (int prec = 0; prec < 2; prec++)
         {
-            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
+            cv::Mat camera_points = vision.detect_points();
+            std::vector<cv::Point3f> cam_points = camera_points;
+            std::vector<cv::Point3f> good_points = vision.filter_out_faraway_points(cam_points);
+            std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
             map.InsertPointsInTree(points);
         }
 
-        EnvironmentPerception perception = map.ComputeRayCasts(
-            robot.get_position(),
-            robot.get_orientation()
-        );
-
-        robot.move_from_last_known_with_pulses(nav.forward());
-        std::vector<cv::Point3f> cam_points;
-        localization.localize(robot, cam_points, map);
+        int pulsos = nav.turn_right90();
+        robot.turn_from_last_known_with_pulses(false, pulsos);
         robot.commit();
     }
 
-    for (int i = 0; i < 4; i++) 
+
+    start_time = std::chrono::steady_clock::now();
+    current_time = std::chrono::steady_clock::now();
+    while (current_time - current_time < std::chrono::seconds(30))
     {
         wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
         if (wall && !object)
             wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
 
-        for (int prec = 0; prec < 2; prec++)
-        {
-            std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
-            map.InsertPointsInTree(points);
-        }
+
+        cv::Mat camera_points = vision.detect_points();
+        std::vector<cv::Point3f> cam_points = camera_points;
+        std::vector<cv::Point3f> good_points = vision.filter_out_faraway_points(cam_points);
+        localization.localize(robot, cam_points, map);
+        std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
+        map.InsertPointsInTree(points);
 
         EnvironmentPerception perception = map.ComputeRayCasts(
             robot.get_position(),
@@ -112,7 +89,11 @@ auto main() -> int
 
     for (int prec = 0; prec < 2; prec++)
     {
-        std::vector<cv::Point3f> points = vision.detect_points(robot.compute_own_camera_position(), robot.get_orientation());
+        cv::Mat camera_points = vision.detect_points();
+        std::vector<cv::Point3f> cam_points = camera_points;
+        std::vector<cv::Point3f> good_points = vision.filter_out_faraway_points(cam_points);
+        localization.localize(robot, cam_points, map);
+        std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
         map.InsertPointsInTree(points);
     }
 

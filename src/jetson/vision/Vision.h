@@ -22,7 +22,10 @@ class Vision
 public:
     Vision(struct CameraParams params);
 
-    std::vector<cv::Point3f> detect_points(cv::Mat position, cv::Mat orientation);
+    cv::Mat detect_points();
+
+    std::vector<cv::Point3f> filter_out_faraway_points(std::vector<cv::Point3f> points);
+    std::vector<cv::Point3f> camera_points_to_world(std::vector<cv::Point3f> camera_points, cv::Mat position, cv::Mat orientation);
 
     ~Vision();
     

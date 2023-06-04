@@ -14,6 +14,7 @@ class Navegacion {
         int forward();
         int turn_left90();
         int turn_right90();
+        int turn_right135();
     	void decide_movement(Robot* robot,bool object,bool wall);
         int turn_backward();
 
