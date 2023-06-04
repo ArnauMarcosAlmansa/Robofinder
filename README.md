@@ -60,9 +60,9 @@ Principales componentes utilizados:
  Componente                                  |                            | Componente                                   |                                |
 |--------------------------------------------|----------------------------|--------------------------------------------|----------------------------|
 | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Jetson_Nano.png)</div>               | Nvidia Jetson Nano Developer Kit               | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/Camara%20duo.PNG)</div>               | DUO MLX - USB Stereo Camera            |
-| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>               | Arduino Mega              | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/ULtrasonido.PNG)</div>             | Sensor de distancia por ultrasonidos HC-SR04            |
-| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/motor.PNG)</div>              | Motor	Micro Metal 150:1            | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/rueda_con_encoder.PNG)</div>              | Rueda antideslizande con encoder            |
-| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/rueda_loca.PNG)</div>| Rueda Loca Metálica| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/powerbanl.PNG)</div>| Power Bank 20A |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/mega.jpg)</div>               | 1 Arduino Mega              | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/ULtrasonido.PNG)</div>             | 2 Sensores de distancia por ultrasonidos HC-SR04            |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/motor.PNG)</div>              | 2 Motor	Micro Metal 150:1            | <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/rueda_con_encoder.PNG)</div>              | 2 Ruedas antideslizantes con encoders            |
+| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/rueda_loca.PNG)</div>| 1 Rueda Loca Metálica| <div style="width: 50%; height: 50%;">![Jetson Nano](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/powerbanl.PNG)</div>| Power Bank 20A |
 
 
 
@@ -75,6 +75,12 @@ Esquema global de Robofinder:
     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/RoboFinder_esquem%C3%A1tico.png" alt="Circuito" width="80%">
 </div>
 
+
+<p align="justify">
+El Arduino tiene conectado el controlador de motores (L298N), los dos sensores de ultrasonido (HC-R04) y los encoders para detectar el movimiento de los motores.
+Aparte el Arduino se comunica con la Jetson Nano mediante I2C. 
+En la Jetson Nano tenemos conectada la cámara estéreo (DUO 3D MLX) mediante USB y la conexión de I2C mediante GPIO (puerto 3 SDA , puerto 5 SCL y puerto 6 GND).
+</p>
 
 # Diseño y Materiales
 Diseño final de la estructura:
