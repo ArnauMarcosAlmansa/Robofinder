@@ -20,7 +20,6 @@ Este robot ha sido diseñado para la exploración y el mapeo de entornos. Gracia
     - [Componentes](#componentes)
     - [Circuito](#circuito)
     - [Diseño y Materiales](#diseño-y-materiales)  
-- [Evolución de la Construcción](#evolución-de-la-construcción)
 - [Software](#software)
 - [Resultado Final](#resultado-final)
 - [Demo Video](#demo-video)
@@ -102,8 +101,6 @@ Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
 </a>
 </div>
 
-
-# Evolución de la Construcción
 
 
 
