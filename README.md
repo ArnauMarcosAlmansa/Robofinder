@@ -127,14 +127,6 @@ Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
 - **Módulo de leds:** Permite definir distintos patrones en la matriz led que tiene el robot. Esta nos notifica cuando el robot se mueve, hacia qué dirección lo hace o si está parado.
     
 </div>
-
-
-## Diagrama de la Jetson:
-
-<p align="center">
-     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/diagrama_sfw_jetson.PNG" alt="sfw_jetson" 
-</p>
-
     
     
 ## Módulos para la Jetson:
