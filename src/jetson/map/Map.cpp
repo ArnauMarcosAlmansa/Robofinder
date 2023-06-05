@@ -52,7 +52,6 @@ EnvironmentPerception Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
             octomap::point3d hitpoint = this->calculateRay(roboPos, matRay, Rrot);
             bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
             puntos.push_back(std::make_pair(hit, hitpoint));
-            if (hit) std::cout << "HIT" << std::endl;
         }
 
         perception.push_disc(puntos);

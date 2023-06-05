@@ -4,7 +4,7 @@
 Navegacion::Navegacion(I2C& i2c) : i2c(i2c) { };
 
 int Navegacion::forward(){
-    i2c.forward(100, 80, 12);
+    i2c.forward(100, 80, 48);
     wait_finish();
     return get_encoder_value();
 }
@@ -15,8 +15,20 @@ int Navegacion::turn_left90() {
     return get_encoder_value();
 }
 
+int Navegacion::turn_right_pulses(int pulses) {
+    i2c.turn_right(100,80,pulses);
+    wait_finish();
+    return get_encoder_value();
+}
+
+int Navegacion::turn_left_pulses(int pulses) {
+    i2c.turn_left(100,80,pulses);
+    wait_finish();
+    return get_encoder_value();
+}
+
 int Navegacion::turn_right90() {
-	i2c.turn_right(100,80,15);
+    i2c.turn_right(100,80,15);
     wait_finish();
     return get_encoder_value();
 }

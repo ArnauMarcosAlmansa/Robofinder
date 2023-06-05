@@ -8,7 +8,7 @@
 #include <thread>
 #include "navegacion/navegacion.h"
 #include "localization/Localization.h"
-
+#include <cmath>
 using namespace std::chrono_literals;
 
 
@@ -29,6 +29,59 @@ void doComputeStart(Robot* robot, Map* map, Vision* vision){
     	(*map).InsertPointsInTree(points);
     }
 
+};
+
+void doRecognition(Robot* robot, Map* map, Vision* vision, Navegacion* nav){
+	for (int i = 0; i < 3; i++){
+        	doComputeStart(robot, map, vision);
+        	int pulsos = (*nav).turn_right90();
+        	(*robot).turn_from_last_known_with_pulses(false, pulsos);
+        	(*robot).commit();
+    	}
+	doComputeStart(robot, map, vision);
+   	int pulsos135 = (*nav).turn_right135();
+	(*robot).turn_from_last_known_with_pulses(false, pulsos135);
+	(*robot).commit();
+	for (int i = 0; i < 3; i++){
+        	doComputeStart(robot, map, vision);
+        	int pulsos = (*nav).turn_right90();
+        	(*robot).turn_from_last_known_with_pulses(false, pulsos);
+        	(*robot).commit();
+    	}
+}
+
+int findMiddleZeroIndex(std::vector<std::pair<bool, octomap::point3d>>& points) {
+    int maxConsecutiveZeros = 0;  // Contador para el número máximo de ceros consecutivos
+    int maxConsecutiveZerosIndex = -1;  // Índice del inicio del tramo más largo de ceros consecutivos
+
+    int currentConsecutiveZeros = 0;  // Contador para el número actual de ceros consecutivos
+    int currentConsecutiveZerosIndex = -1;  // Índice actual del inicio del tramo de ceros consecutivos
+
+    for (auto i = points.begin(); i != points.end(); ++i) {
+        if ((i->second.x() == 0.0 && i->second.y() == 0.0 && i->second.z() == 0.0)) {
+            if (currentConsecutiveZeros == 0) {
+                currentConsecutiveZerosIndex = std::distance(points.begin(), i);
+            }
+            currentConsecutiveZeros++;
+        } else {
+            if (currentConsecutiveZeros > maxConsecutiveZeros) {
+                maxConsecutiveZeros = currentConsecutiveZeros;
+                maxConsecutiveZerosIndex = currentConsecutiveZerosIndex;
+            }
+            currentConsecutiveZeros = 0;
+        }
+    }
+
+    if (currentConsecutiveZeros > maxConsecutiveZeros) {
+        // Si la última secuencia de ceros es la más larga
+        maxConsecutiveZeros = currentConsecutiveZeros;
+        maxConsecutiveZerosIndex = currentConsecutiveZerosIndex;
+    }
+
+    // Calculamos el índice del punto del medio
+    int middleZeroIndex = maxConsecutiveZerosIndex + maxConsecutiveZeros / 2;
+
+    return middleZeroIndex;
 };
 
 auto main() -> int
@@ -55,34 +108,15 @@ auto main() -> int
     bool object = false;
     bool wall = false;
 
-    for (int i = 0; i < 3; i++)
-    {
-	doComputeStart(&robot, &map, &vision);
-        int pulsos = nav.turn_right90();
-        robot.turn_from_last_known_with_pulses(false, pulsos);
-        robot.commit();
-    }
-
-    doComputeStart(&robot, &map, &vision);
-    int pulsos135 = nav.turn_right135();
-    robot.turn_from_last_known_with_pulses(false, pulsos135);
-    robot.commit();
-
-    for (int i = 0; i < 3; i++)
-    {
-        doComputeStart(&robot, &map, &vision);
-        int pulsos = nav.turn_right90();
-        robot.turn_from_last_known_with_pulses(false, pulsos);
-        robot.commit();
-    }
+    doRecognition(&robot, &map, &vision, &nav);
 
     start_time = std::chrono::steady_clock::now();
     current_time = std::chrono::steady_clock::now();
-    while (current_time - start_time < std::chrono::seconds(30))
+    while (current_time - start_time < std::chrono::seconds(380))
     {
         wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
         if (wall && !object)
-            wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;	
+            wall = i2c.getMinimumUltraSoundValue().second < LIMIT_ULTRASENSOR;
 
 
         cv::Mat camera_points = vision.detect_points();
@@ -96,14 +130,33 @@ auto main() -> int
             robot.get_position(),
             robot.get_orientation()
         );
-
-        int pulsos = nav.turn_right90();
+	std::vector<std::pair<bool, octomap::point3d>> tochamen = perception.get_cylinder();
+	std::cout << "Longitud del vector: " << tochamen.size() << std::endl;
+	for(auto& pareja : tochamen){
+		std::cout <<"Pareja de cylindro: " << pareja.second << std::endl;
+	}
+	int index = findMiddleZeroIndex(tochamen);
+	float radians = index * (M_PI / 180.0);
+	std::cout <<"Radians: " << radians << std::endl;
+	std::pair<bool, int> escape = robot.rad_to_pulses(radians);
+	std::cout <<"Me muevorrr:" << escape.first << std::endl;
+	std::cout <<"Pulses needed:" << escape.second << std::endl;
+	if (escape.second >= 30){
+		int idk = nav.turn_left_pulses(escape.second-30);
+		robot.turn_from_last_known_with_pulses(false, idk);
+	}
+	else{
+		int idk = nav.turn_right_pulses(escape.second);
+		robot.turn_from_last_known_with_pulses(false, idk);
+	}
+	robot.commit();
+        int pulsos = nav.forward();
         std::cout << "pulsos: " << pulsos << std::endl;
-        robot.turn_from_last_known_with_pulses(false, pulsos);
+	robot.turn_from_last_known_with_pulses(false,pulsos);
         robot.commit();
 	current_time = std::chrono::steady_clock::now();
     }
-
+    /*
     for (int prec = 0; prec < 2; prec++)
     {
         cv::Mat camera_points = vision.detect_points();
@@ -113,7 +166,7 @@ auto main() -> int
         std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
         map.InsertPointsInTree(points);
     }
-
+   */
     map.SaveMapToFile("vista.bt");
     return 0;
 }

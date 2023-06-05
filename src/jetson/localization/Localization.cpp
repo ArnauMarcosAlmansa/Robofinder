@@ -75,7 +75,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
 {
     if (camera_points.size() == 0)
         throw std::runtime_error("Se ha intentado actualizar los pesos con camera_points.size() = 0.");
-    std::cout << "camera_points.size() = " << camera_points.size() << std::endl;
+    //std::cout << "camera_points.size() = " << camera_points.size() << std::endl;
 
     cv::Mat training_data(camera_points.size(), 3, CV_32F);
     cv::Mat labels(camera_points.size(), 1, CV_32S);
@@ -90,7 +90,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
         labels.at<int>(i, 0) = (camera_points[i].z > 0.0) ? 1 : 0;
     }
 
-    std::cout <<" Training data: " << training_data<< std::endl;
+    //std::cout <<" Training data: " << training_data<< std::endl;
 
     // Entrenar el modelo KNN
     int k = 1; // Número de vecinos más cercanos
@@ -103,8 +103,8 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
     for (auto& particle : particles) {
         cv::Mat particle_cam_pos = particle.position();
         cv::Mat particle_cam_ori = particle.orientation();
-	std::cout <<"Particle cam pos :" << particle_cam_pos << std::endl;
-	std::cout <<"Particle cam ori : " << particle_cam_ori << std::endl << std::endl;
+	//std::cout <<"Particle cam pos :" << particle_cam_pos << std::endl;
+	//std::cout <<"Particle cam ori : " << particle_cam_ori << std::endl << std::endl;
         std::vector<cv::Point3f> points = mapa.detect_points_with_virtual_camera(particle_cam_pos, particle_cam_ori);
         if (points.size() == 0)
         {
@@ -121,7 +121,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
             sample_data.at<float>(i, 2) = points[i].z;
         }
 
-	std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
+	//std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
 
         // Encontrar los vecinos más cercanos utilizando KNN
         cv::Mat neighbor_indices, neighbor_labels, neighbor_distances;
@@ -129,7 +129,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
 
         // TODO: ajustar para que si hay pocos puntos no pueda dar bien
 
-	std::cout<<"ASSURE NEIGHBOR: "<< neighbor_distances << std::endl;
+	//std::cout<<"ASSURE NEIGHBOR: "<< neighbor_distances << std::endl;
         neighbor_distances = 1 / neighbor_distances;
 
         particle.weight = cv::sum(neighbor_distances)[0] / points.size();
@@ -172,7 +172,7 @@ cv::Point2f MonteCarloLocalization::estimateRobotPosition() {
 
     // Calcular la suma ponderada de las posiciones de las partículas
     for (const auto& particle : particles) {
-	std::cout <<"PARTICLE VALUE: Particle weight: " << particle.weight << " , PoseX: " << particle.pose.x << " Particle pose Y: " << particle.pose.y << std::endl;
+	//std::cout <<"PARTICLE VALUE: Particle weight: " << particle.weight << " , PoseX: " << particle.pose.x << " Particle pose Y: " << particle.pose.y << std::endl;
         double weight = particle.weight;
         sumX += particle.pose.x * weight;
         sumY += particle.pose.y * weight;
