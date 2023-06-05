@@ -86,6 +86,11 @@ En la Jetson Nano tenemos conectada la cámara estéreo (DUO 3D MLX) mediante US
 Diseño final de la estructura:
 
 <div align="center">
+     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/dise%C3%B1os_tabla.PNG" alt="Robofinder_tabla" width="80%">
+</div>
+
+
+<div align="center">
      <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG" alt="Robofinder_final_stl" width="80%">
 </div>
 
