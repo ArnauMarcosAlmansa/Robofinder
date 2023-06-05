@@ -84,20 +84,19 @@ En la Jetson Nano tenemos conectada la cámara estéreo (DUO 3D MLX) mediante US
 # Diseño y Materiales
 Diseño final de la estructura:
 
-<div align="center">
-     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/dise%C3%B1os_tabla.PNG" alt="Robofinder_tabla" width="80%">
-</div>
 
-<div align="center">
-     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/dise%C3%B1o_tabla_2.PNG" alt="Robofinder_tabla_2" width="80%">
-</div>
+ Componente                                  |        Componente                                   |              
+|:--------------------------------------------:|:--------------------------------------------:|
+| **Base del Robot** <div style="width: 50%; height: 50%; margin:auto;">![Base del Robot](/Im%C3%A1genes%20para%20Readme/Piezas%203D/Base%20Robofinder.png)</div> | **Piso intermedio y superior del Robot** <div style="width: 50%; height: 50%;; margin:auto">![Piso intermedio y superior del Robot](/Im%C3%A1genes%20para%20Readme/Piezas%203D/Piso%20Robofinder.png)</div>
+| **Soporte de la cámara 3D** <div style="width: 50%; height: 50%;; margin:auto">![Soporte de la cámara 3D](/Im%C3%A1genes%20para%20Readme/Piezas%203D/Soporte%20Camara%20Robofinder.png)</div> | **Soporte para los sensores de ultrasonido** <div style="width: 50%; height: 50%;; margin:auto">![Soporte para los sensores de ultrasonido](/Im%C3%A1genes%20para%20Readme/Piezas%203D/Soporte_ultrasonido.png)</div>
+| **Soporte para la matriz led** <div style="width: 50%; height: 50%;; margin:auto">![Soporte para la matriz led](/Im%C3%A1genes%20para%20Readme/Piezas%203D/32x8_matrix_v09_mod.png)</div> | **Soporte para el motor y aspa** <div style="width: 50%; height: 50%;; margin:auto">![Soporte para el motor y aspa](/Im%C3%A1genes%20para%20Readme/Piezas%203D/fan%2Bbase.png)</div>
 
 
 Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
 
 <div align="center">
 <a href="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/models/Piezas_robofinder_montado.stl">
-  <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG" width="80%" alt="Texto alternativo">
+  <img src="/Im%C3%A1genes%20para%20Readme/Piezas%203D/Robofinder_montado_x2.jpg" width="80%">
 </a>
 </div>
 
