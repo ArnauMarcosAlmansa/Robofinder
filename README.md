@@ -132,20 +132,31 @@ Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
 ## Módulos para la Jetson:
 
 <div align="justify">
-    
-- **Módulo de captura de imagen:** Encargado de captar las imágenes en el formato, medida e intervalo que designemos.
 
-- **Módulo de detección de puntos con imágenes:** Con los conjuntos de imágenes capturados, tenemos que usar un algoritmo SIFT, SURF o ORB para detectar puntos relevantes en las imágenes y ponerlos en correspondencia. Una vez tengamos los pares de puntos, deberíamos poder estimar donde están estos puntos en el espacio.
+- **Módulo de comunicación I2C** Para poder comunicar con el Arduino cuando ha de empezar a mover los motores, qué motores, a que velocidad, también para recibir datos de los sensores de ultrasonido y los valores de los encoders. La comunicación se hace usando un protocolo de mensajes que hemos definido nosotros. Este protocolo envia un byte indicando el tipo de mensaje y un payload de datos.
 
-- **Módulo de reconocimiento de objetos:** Poder reconocer los objetos del entorno, como los carteles de las puertas de las aulas, escaleras, etc.
+- **Módulo de Mapa**
+Generar un mapa de ocupación 3D del espacio donde se mueve el robot para poder navegar y consultar que tiene el robot a su alrededor y no colisionar con los objetos. Esto nos permite intentar localizar el robot y navegar teniendo en cuenta parte del entorno que el robot no está viendo en un momento concreto.
+Hemos hecho uso de la librería OctoMap (https://github.com/OctoMap/octomap).
 
-- **Módulo de reconocimiento de texto:** Poder leer y comprender el texto que tenemos en las imágenes para poder buscar una aula en concreto.
+- **Módulo de Visión**
+Este módulo es el encargado de hacer las imágenes con la cámara estéreo. 
+Aplicamos el detector de características ORB para encontrar puntos de interés junto con BruteForce Matcher. Hacemos la correspondencia entre los puntos de ambas imágenes y filtramos las correspondencias para quitar las malas. Esto lo hacemos con el ratio de Lowe y filtrando las que tienen coordenada ‘y’ muy diferente. 
+Triangulamos los puntos en el espacio 3D de la cámara. Luego los convertimos al espacio 3D del mundo.
+Para hacer el procesamiento usamos OpenCV con CUDA.
 
-- **Módulo de comunicación I2C:** Para poder comunicar al Arduino cuando ha de empezar a mover los motores, qué motores y a qué velocidad. También recibir datos de los sensores de ultrasonido que envíe el Arduino.
+- **Módulo de Localización**
+Este módulo se encarga de intentar ubicar al robot dentro del espacio usando la información del mapa y los puntos que detecta la cámara.
+Para conseguir ubicar el robot este módulo incorpora la localización de Monte Carlo para poder determinar en que zona está el robot. 
+Concretamente, generamos partículas en un rango probable de error del robot. Para asignar a cada partícula un peso hacemos RayCast desde la posición y orientación de una especie de cámara virtual de cada partícula y hacemos un KNN con k = 1 con los puntos detectados de la cámara, asignando un peso menor a aquellas partículas que tienen menor correspondencia con los puntos de la cámara.
+Después de esto, hacemos un resampling de partículas con el algoritmo llamado Random Wheel, que consiste en  generar nuevas partidas a partir del peso cumulativo de las anteriores.
+Todo el proceso anterior se itera cinco veces para refinar y aproximar la posición estimada del robot.
+Para este módulo utilizamos la parte de ML de OpenCV.
 
-- **Módulo de navegación:** Se encarga de decidir hacia dónde tiene que moverse el robot según a dónde hay que ir y la información que tenemos del entorno en el mapa. Tiene que poder generar rutas para ir de un punto de origen a un punto de destino.
-
-- **Módulo de mapa:** Generar un mapa 3D del espacio donde se mueve el robot para poder navegar y consultar qué tiene el robot a su alrededor y no colisionar con los objetos. Esto lo haremos utilizando alguna librería como OctoMap (https://github.com/OctoMap/octomap).
+- **Módulo de Navegación**
+Este módulo se encarga de planificar la navegación local.
+Este módulo es el que se encarga de generar las órdenes que finalmente llegan al Arduino para la gestión de los motores y de los sensores. 
+Teniendo en cuenta la posición del robot, hacemos raycast 360 grados alrededor del robot a 15 alturas diferentes de 0.5 cm a 15.5 cm, que es la altura del robot. A partir de los datos del raycast, el robot busca un ángulo donde no haya obstáculos, mira que no haya obstáculos con los ultrasonidos y avanza.
 
 </div>
 
