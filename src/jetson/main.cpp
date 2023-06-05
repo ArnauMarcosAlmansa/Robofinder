@@ -130,7 +130,7 @@ auto main() -> int
         cv::Mat camera_points = vision.detect_points();
         std::vector<cv::Point3f> cam_points = camera_points;
         std::vector<cv::Point3f> good_points = vision.filter_out_faraway_points(cam_points);
-        // localization.localize(robot, cam_points, map);
+        localization.localize(robot, cam_points, map);
         std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
         map.InsertPointsInTree(points);
         map.SaveMapToFile("mapa");
@@ -166,17 +166,6 @@ auto main() -> int
 
         current_time = std::chrono::steady_clock::now();
     }
-    /*
-    for (int prec = 0; prec < 2; prec++)
-    {
-        cv::Mat camera_points = vision.detect_points();
-        std::vector<cv::Point3f> cam_points = camera_points;
-        std::vector<cv::Point3f> good_points = vision.filter_out_faraway_points(cam_points);
-        localization.localize(robot, cam_points, map);
-        std::vector<cv::Point3f> points = vision.camera_points_to_world(good_points, robot.compute_own_camera_position(), robot.get_orientation());
-        map.InsertPointsInTree(points);
-    }
-   */
     map.SaveMapToFile("mapa");
     return 0;
 }
