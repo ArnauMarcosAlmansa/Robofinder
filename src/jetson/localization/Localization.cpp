@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <opencv2/opencv.hpp>
+#include <algorithm>
 
 cv::Mat Particle::position()
 {
@@ -31,7 +32,7 @@ cv::Mat Particle::orientation()
 
 
 MonteCarloLocalization::MonteCarloLocalization(int n_particles):
-    n_particles(n_particles),
+    n_particles(1),
     random_deviation(0.0, 0.1),
     deviation_generator(std::random_device()()),
     random_rotation(0.0, 0.261799),
@@ -103,8 +104,8 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
     for (auto& particle : particles) {
         cv::Mat particle_cam_pos = particle.position();
         cv::Mat particle_cam_ori = particle.orientation();
-	std::cout <<"Particle cam pos :" << particle_cam_pos << std::endl;
-	std::cout <<"Particle cam ori : " << particle_cam_ori << std::endl << std::endl;
+	    std::cout <<"Particle cam pos :" << particle_cam_pos << std::endl;
+	    std::cout <<"Particle cam ori : " << particle_cam_ori << std::endl << std::endl;
         std::vector<cv::Point3f> points = mapa.detect_points_with_virtual_camera(particle_cam_pos, particle_cam_ori);
         if (points.size() == 0)
         {
@@ -114,14 +115,13 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
 
         // TODO: revisar
         cv::Mat sample_data(points.size(), 3, CV_32F);
-
         for (size_t i = 0; i < points.size(); i++) {
             sample_data.at<float>(i, 0) = points[i].x;
             sample_data.at<float>(i, 1) = points[i].y;
             sample_data.at<float>(i, 2) = points[i].z;
         }
 
-	std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
+	    std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
 
         // Encontrar los vecinos más cercanos utilizando KNN
         cv::Mat neighbor_indices, neighbor_labels, neighbor_distances;
@@ -129,10 +129,11 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
 
         // TODO: ajustar para que si hay pocos puntos no pueda dar bien
 
-	std::cout<<"ASSURE NEIGHBOR: "<< neighbor_distances << std::endl;
+	    std::cout<<"ASSURE NEIGHBOR: "<< neighbor_distances << std::endl;
         neighbor_distances = 1 / neighbor_distances;
 
-        particle.weight = cv::sum(neighbor_distances)[0] / points.size();
+        double penalty = 0.2 * std::max<double>(0.0, (double) camera_points.size() - (double) points.size());
+        particle.weight = (cv::sum(neighbor_distances)[0] + 1 / penalty) / camera_points.size();
     }
 }
 

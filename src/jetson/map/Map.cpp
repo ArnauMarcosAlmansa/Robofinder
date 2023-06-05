@@ -1,5 +1,7 @@
 #include "Map.h"
 #include <iostream>
+#include <set>
+#include <algorithm>
 
 #define PI 3.14159265358
 
@@ -52,7 +54,7 @@ EnvironmentPerception Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
             octomap::point3d hitpoint = this->calculateRay(roboPos, matRay, Rrot);
             bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
             puntos.push_back(std::make_pair(hit, hitpoint));
-            if (hit) std::cout << "HIT" << std::endl;
+            // if (hit) std::cout << "HIT" << std::endl;
         }
 
         perception.push_disc(puntos);
@@ -98,7 +100,11 @@ bool Map::DetectObjectInFront(cv::Mat posit){
 
 std::vector<cv::Point3f> Map::detect_points_with_virtual_camera(cv::Mat& camera_position, cv::Mat& camera_orientation)
 {
-    std::vector<cv::Point3f> points;
+    cv::Mat inverse_rotation = camera_orientation.inv();
+    cv::Mat inverse_translation = -camera_position;
+
+    std::vector<cv::Point3f> unique_points;
+
     float h_rads = 165.0 * PI / 180.0;
     float min_h_rads = -(h_rads / 2);
     float max_h_rads = (h_rads / 2);
@@ -130,16 +136,26 @@ std::vector<cv::Point3f> Map::detect_points_with_virtual_camera(cv::Mat& camera_
                 -std::sin(v_rads), 0, std::cos(v_rads)
             );
 
-
             octomap::point3d hitpoint = calculateRay(cam_pos, z_rotation * y_rotation, camera_orientation);
             bool hit = hitpoint.x() != 0 || hitpoint.y() != 0 || hitpoint.z() != 0;
-            // TODO: poner los puntos respecto a la camara
+            // DONE?: poner los puntos respecto a la camara
             if (hit)
-                points.push_back(cv::Point3f(hitpoint.x(), hitpoint.y(), hitpoint.z()));
+            {
+                cv::Mat pt_mat =  (cv::Mat_<float>(3, 1) <<
+                    hitpoint.x(), hitpoint.y(), hitpoint.z()
+                );
+
+                pt_mat = inverse_translation + inverse_rotation * pt_mat;
+                cv::Point3f pt(pt_mat.at<float>(0), pt_mat.at<float>(1), pt_mat.at<float>(2));
+
+                if (std::find(unique_points.begin(), unique_points.end(), pt) == unique_points.end()) {
+                    unique_points.push_back(pt);
+                }
+            }
         }
     }
 
-    return points;
+    return unique_points;
 }
 
 

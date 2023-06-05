@@ -206,8 +206,26 @@ cv::Mat Vision::detect_points()
 
     // std::cout << "homogeneous_points.size = " << homogeneous_points.size << std::endl;
 
+    std::cout << "ANTES DEL RESHAPE 1" << std::endl;
+
     cv::Mat points3d;
     cv::convertPointsFromHomogeneous(homogeneous_points, points3d);
+
+    cv::Mat axis_system_change = (cv::Mat_<float>(3, 3) <<
+        0, 0, -1,
+        1, 0, 0,
+        0, 1, 0
+    );
+    std::cout << "ANTES DEL RESHAPE 1" << std::endl;
+    points3d = points3d.reshape(1);
+    cv::transpose(points3d, points3d);
+    std::cout << "ANTES DE LA MUL" << std::endl;
+    points3d = axis_system_change * points3d;
+    std::cout << "ANTES DEL RESHAPE 3" << std::endl;
+    cv::transpose(points3d, points3d);
+    points3d = points3d.reshape(3);
+
+    std::cout << "ANTES DEL RETURN" << std::endl;
     return points3d;
 }
 
@@ -237,22 +255,6 @@ std::vector<cv::Point3f> Vision::camera_points_to_world(std::vector<cv::Point3f>
     // std::cout << "Points3d.size = " << points3d.size << std::endl;
 
     cv::transpose(camera_points, camera_points);
-
-    // std::cout << "transpose(Points3d).size = " << points3d.size << std::endl;
-
-    cv::Mat axis_system_change = (cv::Mat_<float>(3, 3) <<
-        0, 0, 1,
-        -1, 0, 0,
-        0, -1, 0
-    );
-
-    axis_system_change = (cv::Mat_<float>(3, 3) <<
-        0, 0, -1,
-        1, 0, 0,
-        0, 1, 0
-    );
-
-    camera_points = axis_system_change * camera_points;
 
     world_coordinates(camera_points, position, orientation);
 
