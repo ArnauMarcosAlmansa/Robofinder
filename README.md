@@ -94,10 +94,14 @@ Diseño final de la estructura:
 </div>
 
 
-<div align="center">
+Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
+
+
+<div align="center" href="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/models/Piezas_robofinder_montado.stl">
      <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG" alt="Robofinder_final_stl" width="80%">
 </div>
 
+https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/models/Piezas_robofinder_montado.stl
 # Evolución de la Construcción
 
 
