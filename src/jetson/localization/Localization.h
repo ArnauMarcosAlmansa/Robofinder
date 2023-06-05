@@ -36,7 +36,7 @@ private:
 
     void update_particle_weights(const std::vector<cv::Point3f>& camera_points, Map& mapa);
     void resampleParticles();
-    cv::Point2f estimateRobotPosition();
+    cv::Point3f estimateRobotPose();
 
 public:
     MonteCarloLocalization(int n_particles);

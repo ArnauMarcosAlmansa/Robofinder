@@ -15,6 +15,8 @@ class Map {
 private:
     octomap::OcTree tree;
     float resolution;
+
+    int version;
 public:
     Map(float resolution);  // Constructor
     void SaveMapToFile(std::string filename);

@@ -32,7 +32,7 @@ cv::Mat Particle::orientation()
 
 
 MonteCarloLocalization::MonteCarloLocalization(int n_particles):
-    n_particles(1),
+    n_particles(n_particles),
     random_deviation(0.0, 0.1),
     deviation_generator(std::random_device()()),
     random_rotation(0.0, 0.261799),
@@ -91,7 +91,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
         labels.at<int>(i, 0) = (camera_points[i].z > 0.0) ? 1 : 0;
     }
 
-    //std::cout <<" Training data: " << training_data<< std::endl;
+    std::cout <<" TRAINING DATA: " << training_data<< std::endl;
 
     // Entrenar el modelo KNN
     int k = 1; // Número de vecinos más cercanos
@@ -121,8 +121,7 @@ void MonteCarloLocalization::update_particle_weights(const std::vector<cv::Point
             sample_data.at<float>(i, 2) = points[i].z;
         }
 
-
-	    // std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
+	    std::cout << "FIND NEAREST SAMPLE DATA: " << sample_data << std::endl;
 
         // Encontrar los vecinos más cercanos utilizando KNN
         cv::Mat neighbor_indices, neighbor_labels, neighbor_distances;
@@ -167,26 +166,32 @@ void MonteCarloLocalization::resampleParticles(){
 }
 
 
-cv::Point2f MonteCarloLocalization::estimateRobotPosition() {
+cv::Point3f MonteCarloLocalization::estimateRobotPose() {
     double totalWeight = 0.0;
     double sumX = 0.0;
     double sumY = 0.0;
+    double sumTheta = 0.0;
 
     // Calcular la suma ponderada de las posiciones de las partículas
     for (const auto& particle : particles) {
 	//std::cout <<"PARTICLE VALUE: Particle weight: " << particle.weight << " , PoseX: " << particle.pose.x << " Particle pose Y: " << particle.pose.y << std::endl;
         double weight = particle.weight;
-        sumX += particle.pose.x * weight;
-        sumY += particle.pose.y * weight;
-        totalWeight += weight;
+        if (!std::isnan(weight) && std::isfinite(weight) && !std::isnan(particle.pose.x) && std::isfinite(particle.pose.x) && !std::isnan(particle.pose.y) && std::isfinite(particle.pose.y))
+        {
+            sumX += particle.pose.x * weight;
+            sumY += particle.pose.y * weight;
+            sumTheta += particle.pose.theta * weight;
+            totalWeight += weight;
+        }
     }
 
     // Calcular la media ponderada de las posiciones
     std::cout <<"ASSURANCE: sumX: " << sumX << ", sumY: " << sumY << ", totalWeight: "<< totalWeight << std::endl;
     double meanX = sumX / totalWeight;
     double meanY = sumY / totalWeight;
+    double meanTheta = sumTheta / totalWeight;
 
-    return cv::Point2f(meanX, meanY);
+    return cv::Point3f(meanX, meanY, meanTheta);
 }
 
 
@@ -199,10 +204,23 @@ void MonteCarloLocalization::localize(Robot& robot, std::vector<cv::Point3f>& ca
         robot.get_orientation().at<float>(0, 0)
     );
     generate_initial_particles(x, y, theta);
-    update_particle_weights(camera_points, mapa);
-    resampleParticles();
+    for (int i = 0; i < 5; i++)
+    {
+        update_particle_weights(camera_points, mapa);
+        resampleParticles();
+    }
 
-    cv::Point2f estimatedPosit;
-    estimatedPosit = estimateRobotPosition();
+    cv::Point3f estimatedPosit = estimateRobotPose();
     std::cout << "Posición estimada:" <<  estimatedPosit << std::endl;
+
+    if (estimatedPosit.x != 0.0 || estimatedPosit.y != 0.0 || estimatedPosit.z != 0.0)
+    {
+        robot.get_position().at<float>(0) = estimatedPosit.x;
+        robot.get_position().at<float>(1) = estimatedPosit.y;
+        robot.get_orientation() = (cv::Mat_<float>(3, 3) <<
+            std::cos(estimatedPosit.z), -std::sin(estimatedPosit.z), 0,
+            std::sin(estimatedPosit.z), std::cos(estimatedPosit.z), 0,
+            0, 0, 1
+        );
+    }
 }

@@ -2,18 +2,19 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
+#include <string>
 
 #define PI 3.14159265358
 
-Map::Map(float resolution) : resolution(resolution), tree(resolution) {
+Map::Map(float resolution) : resolution(resolution), tree(resolution), version(0) {
 
 };
 
 void Map::SaveMapToFile(std::string filename){
-    if (this->tree.writeBinary(filename)) {
-   	    std::cout << "Árbol octal guardado en: " << filename << std::endl;
+    if (this->tree.writeBinary(filename + std::to_string(version) + ".bt")) {
+   	    std::cout << "Árbol octal guardado en: " << (filename + std::to_string(version) + ".bt") << std::endl;
     } else {
-   	std::cout << "Error al guardar el árbol octal en: " << filename << std::endl;
+   	std::cout << "Error al guardar el árbol octal en: " << (filename + std::to_string(version) + ".bt") << std::endl;
    }
 };
 
@@ -27,6 +28,7 @@ void Map::InsertPointsInTree(std::vector<cv::Point3f> points){
         std::cout << p.x << "\t" << p.y << "\t" << p.z << std::endl;
         InsertPointInTree(p);
 	}
+    version++;
 };
 
 EnvironmentPerception Map::ComputeRayCasts(cv::Mat posit, cv::Mat Rrot)
