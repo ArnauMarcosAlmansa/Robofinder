@@ -89,6 +89,10 @@ Diseño final de la estructura:
      <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/dise%C3%B1os_tabla.PNG" alt="Robofinder_tabla" width="80%">
 </div>
 
+<div align="center">
+     <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/dise%C3%B1o_tabla_2.PNG" alt="Robofinder_tabla_2" width="80%">
+</div>
+
 
 <div align="center">
      <img src="https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/robo_stl.PNG" alt="Robofinder_final_stl" width="80%">
