@@ -167,7 +167,7 @@ Si quieres ver el diseño en 3D en detalle, presiona en esta imagen:
 Presiona la miniatura para visualizar el video en youtube de todo el proceso!
 
 
-[![Demo del proyecto](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/miniatura.png)](https://www.youtube.com/)
+[![Demo del proyecto](https://github.com/ArnauMarcosAlmansa/Robofinder/blob/master/Im%C3%A1genes%20para%20Readme/miniatura.png)](https://youtu.be/TqlxrmKnXCs/)
 
 
 
