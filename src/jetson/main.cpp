@@ -53,9 +53,9 @@ void doRecognition(Robot* robot, Map* map, Vision* vision, Navegacion* nav){
 
 int findMiddleZeroIndex(std::vector<std::pair<bool, octomap::point3d>>& points) {
 
-    // int initial_size = points.size();
-    // for (int i = 0; i < initial_size; i++)
-    //     points.push_back(points[i]);
+    int initial_size = points.size();
+    for (int i = 0; i < initial_size; i++)
+        points.push_back(points[i]);
 
 
     int maxConsecutiveZeros = 0;  // Contador para el número máximo de ceros consecutivos
